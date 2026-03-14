@@ -1,4 +1,4 @@
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -25,12 +25,10 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: {
-            values: ['creator', 'fan', 'brand'],
-            message: '{VALUE} is not supported',
-        },
+        enum: ['creator', 'fan', 'brand'],
         default: 'creator',
-    }
+    },
+    location: String
 }, {timestamps: true});
 
 UserSchema.pre('save', async function () {
