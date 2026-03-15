@@ -3,6 +3,8 @@ const { UnauthenticatedError } = require('../errors');
 
 const auth = (req, res, next) => {
     // check header
+    // console.log('Auth middleware called');
+    // console.log('Header:', req.headers);
     const authHeader = req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new UnauthenticatedError('Authenticated invalid');
@@ -11,7 +13,7 @@ const auth = (req, res, next) => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET)
-        req.user = { userId: payload.userId, name: payload.name}
+        req.user = { userId: payload.userId, name: payload.name, role: payload.role }
         next()
     } catch (err) {
         throw new UnauthenticatedError('Authentication invalid');

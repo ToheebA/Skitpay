@@ -31,4 +31,4 @@ const CreatorProfileSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-module.exports = mongoose.model('CreatorProfile', CreatorProfileSchema);
+module.exports = mongoose.model('Creator_Profile', CreatorProfileSchema);
