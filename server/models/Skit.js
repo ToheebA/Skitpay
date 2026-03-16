@@ -46,6 +46,10 @@ const SkitSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CreatorProfile',
         required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 

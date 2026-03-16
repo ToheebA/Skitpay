@@ -28,6 +28,14 @@ const CreatorProfileSchema = new mongoose.Schema({
     subscriptionPrice: {
         type: Number,
         default: 0,
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    scheduledDeletion: {
+        type: Date,
+        default: null
     }
 }, {timestamps: true});
 
