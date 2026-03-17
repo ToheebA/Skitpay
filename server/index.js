@@ -6,7 +6,6 @@ const express = require('express');
 const app = express();
 
 const connectDB = require('./db/connect');
-const authenticateUser = require('./middleware/authentication');
 
 const authRouter = require('./routes/auth');
 const creatorRouter = require('./routes/creator');

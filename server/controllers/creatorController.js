@@ -1,5 +1,6 @@
 const Creator_Profile = require('../models/Creator_Profile');
 const Skit = require('../models/Skit');
+const Subscription = require('../models/Subscription');
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, NotFoundError } = require('../errors');
 
@@ -54,7 +55,7 @@ const deactivateProfile = async (req, res) => {
         user: userId,
         isActive: true
     });
-    console.log(profile);
+    
     if (!profile) {
         throw new NotFoundError(`No active profile found for user ${userId}`);
     }
@@ -90,6 +91,31 @@ const deactivateProfile = async (req, res) => {
 
     res.status(StatusCodes.OK).json({
         msg: 'Profile deactivated successfully'
+    })
+}
+
+const reactivateProfile = async (req, res) => {
+    const {
+        user: { userId }
+    } = req;
+
+    const profile = await Creator_Profile.findOneAndUpdate(
+       { user: userId, isActive: false },
+       { isActive: true, scheduledDeletion: null },
+       { new: true }
+    )
+
+    if (!profile) {
+        throw new NotFoundError(`No deactivated profile found for user ${userId}`);
+    }
+
+    await Skit.updateMany(
+        { createdBy: profile._id, isActive: false },
+        { isActive: true }
+    )
+
+    res.status(StatusCodes.OK).json({
+        msg: 'Profile reactivated successfully'
     })
 }
 
@@ -204,7 +230,8 @@ module.exports = {
     createProfile, 
     getProfile, 
     updateProfile,
-    deactivateProfile, 
+    deactivateProfile,
+    reactivateProfile, 
     uploadSkit, 
     getSkits,
     updateSkit, 
