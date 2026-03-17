@@ -8,6 +8,7 @@ const {
     getProfile,
     updateProfile,
     deactivateProfile,
+    reactivateProfile,
     uploadSkit,
     getSkits,
     updateSkit,
@@ -22,6 +23,7 @@ router.route('/profile')
     .get(getProfile)
     .patch(updateProfile)
     .delete(deactivateProfile);
+router.patch('/profile/reactivate', reactivateProfile);
 router.route('/skits')
     .post(uploadSkit)
     .get(getSkits);
