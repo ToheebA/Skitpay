@@ -18,6 +18,13 @@ const SkitSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a thumbnail url']
     },
+    niche: {
+        type: String,
+        enum: ['comedy', 'skits', 'music', 'dance', 
+'fashion', 'food', 'lifestyle', 'education',
+'gaming', 'sports', 'news', 'travel'],
+        required: [true, 'Please provide a niche']
+    },
     visibility: {
         type: String,
         enum: ['free', 'paid'],

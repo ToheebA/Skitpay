@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authenticateUser = require('../middleware/authentication');
 const authenticateRole = require('../middleware/role_authentication');
+const optionalAuthMiddleware = require('../middleware/optionalAuth');
+
 
 
 const {
@@ -13,7 +15,7 @@ const {
 } = require('../controllers/fanController');
 
 router.get('/skits', getAllSkits);
-router.get('/skits/:id', getSkit);
+router.get('/skits/:id', optionalAuthMiddleware, getSkit);
 router.post('/skits/:id/like', authenticateUser, likeSkit);
 router.post(
     '/subscriptions', 

@@ -133,6 +133,7 @@ const uploadSkit =  async (req, res) => {
     };
 
     req.body.createdBy = profile._id;
+    req.body.niche = profile.niche;
     const skit = await Skit.create(req.body);
     res.status(StatusCodes.CREATED).json({ skit });
 }
