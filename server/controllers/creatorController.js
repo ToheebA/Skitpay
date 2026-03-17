@@ -235,5 +235,5 @@ module.exports = {
     uploadSkit, 
     getSkits,
     updateSkit, 
-    deleteSkit 
+    deleteSkit,
 }
