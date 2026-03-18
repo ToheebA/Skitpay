@@ -25,7 +25,7 @@ const getAllSkits = async (req, res) => {
         result = result.sort('-createdAt')
     }
 
-    result = result.select('title description niche thumbnailUrl visibility price createdBy')
+    result = result.select('title description niche thumbnailUrl visibility price createdBy likes viewCount createdAt');
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
@@ -84,7 +84,35 @@ const getSkit = async (req, res) => {
 }
 
 const likeSkit = async (req, res) => {
-    res.status(200).json({ message: 'Skit liked successfully' });
+    const { id: skitId } = req.params;
+    const { user: { userId } } = req;
+    const skit = await Skit.findById(skitId);
+
+    if (!skit) {
+        throw new NotFoundError(`No skit found with id ${skitId}`);
+    }
+
+    let message;
+    if (skit.likes.some(id => id.toString() === userId)) {
+        await Skit.findByIdAndUpdate(
+            skitId,
+            { $pull: { likes: userId } },
+            { new: true }
+        )
+        message = 'Skit unliked successfully';
+    } else {
+        await Skit.findByIdAndUpdate(
+            skitId,
+            { $addToSet: { likes: userId } },
+            { new: true }
+        )
+        message = 'Skit liked successfully';
+    }
+    const updatedSkit = await Skit.findById(skitId);
+    res.status(200).json({ 
+        msg: message,
+        likes: updatedSkit.likes.length
+    });
 }
 
 const activateSubscription = async (req, res) => {
