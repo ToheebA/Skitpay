@@ -123,6 +123,12 @@ const uploadSkit =  async (req, res) => {
     const {
         user: { userId }
     } = req;
+
+    if (!req.files || !req.files.video || !req.files.thumbnail) {
+        throw new BadRequestError('Video and thumbnail are required');
+    }
+    const videoUrl = req.files.video[0].path;
+    const thumbnailUrl = req.files.thumbnail[0].path;
     const profile = await Creator_Profile.findOne({ 
         user: userId, 
         isActive: true 
@@ -132,6 +138,8 @@ const uploadSkit =  async (req, res) => {
         throw new NotFoundError('No active profile found');
     };
 
+    req.body.videoUrl = videoUrl;
+    req.body.thumbnailUrl = thumbnailUrl;
     req.body.createdBy = profile._id;
     req.body.niche = profile.niche;
     const skit = await Skit.create(req.body);

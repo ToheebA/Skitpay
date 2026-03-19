@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
 
 const auth = (req, res, next) => {
-    console.log('Auth middleware hit')
-    console.log('Authorization header:', req.headers.authorization)
     const authHeader = req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new UnauthenticatedError('Authenticated invalid');

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authenticateUser = require('../middleware/authentication');
 const authenticateRole = require('../middleware/role_authentication');
+const { multiUpload } = require('../config/cloudinary');
 
 const {
     createProfile,
@@ -25,7 +26,7 @@ router.route('/profile')
     .delete(deactivateProfile);
 router.patch('/profile/reactivate', reactivateProfile);
 router.route('/skits')
-    .post(uploadSkit)
+    .post(multiUpload, uploadSkit)
     .get(getSkits);
 router.route('/skits/:id')
     .patch(updateSkit)
