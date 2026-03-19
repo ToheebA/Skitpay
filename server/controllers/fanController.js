@@ -2,7 +2,7 @@ const Creator_Profile = require('../models/Creator_Profile');
 const Subscription = require('../models/Subscription');
 const Skit = require('../models/Skit');
 const User = require('../models/User');
-const { UnauthenticatedError } = require('../errors');
+const { UnauthenticatedError, NotFoundError } = require('../errors');
 
 const getAllSkits = async (req, res) => {
     const { sort, niche, visibility } = req.query;
@@ -34,6 +34,30 @@ const getAllSkits = async (req, res) => {
     result = result.skip(skip).limit(limit);
     const skits = await result;
     res.status(200).json({ skits, nbHits: skits.length });
+}
+
+const getAllCreators = async (req, res) => {
+    const { niche, sort } = req.query;
+    const queryObject = {};
+    queryObject.isActive = true;
+
+    if (niche) {
+        queryObject.niche = niche;
+    }
+
+    let result = Creator_Profile.find(queryObject).populate('user', 'name');
+
+    if (sort) {
+        const sortList = sort.split(',').join(' ');
+        result = result.sort(sortList);
+    }
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    result = result.skip(skip).limit(limit);
+    const creators = await result;
+    res.status(200).json({ creators, nbHits: creators.length });
 }
 
 const getSkit = async (req, res) => {
@@ -116,15 +140,59 @@ const likeSkit = async (req, res) => {
 }
 
 const activateSubscription = async (req, res) => {
-    res.status(200).json({ message: 'Subscription activated successfully' });
+    const {
+        user: {userId}
+    } = req;
+    const { creatorProfileId } = req.params;
+    const creatorProfile = await Creator_Profile.findOne({ 
+        _id: creatorProfileId,
+        isActive: true
+     });
+    if (!creatorProfile) {
+        throw new NotFoundError('Creator profile not found');
+    }
+    
+    if (userId === creatorProfile.user.toString()) {
+        throw new BadRequestError('You cannot subscribe to yourself');
+    }
+    const existingSubscription = await Subscription.findOne({
+        fan: userId,
+        creator: creatorProfile.user,
+        status: 'active'
+    });
+    if (existingSubscription) {
+        throw new BadRequestError('You are already subscribed to this creator');
+    }
+    const subscriptionPrice = creatorProfile.subscriptionPrice;
+    const subscription = await Subscription.create({
+        fan: userId,
+        creator: creatorProfile.user,
+        amount: subscriptionPrice
+    })
+    res.status(201).json({ subscription });
 }
 
 const cancelSubscription = async (req, res) => {
+    const {
+        user: { userId }
+    } = req;
+    const { id: subscriptionId } = req.params;
+    const subscription = await Subscription.findOne({
+        _id: subscriptionId,
+        fan: userId,
+        status: 'active'
+    });
+    if (!subscription) {
+        throw new NotFoundError('Active subscription not found');
+    }
+    subscription.status = 'cancelled';
+    await subscription.save();
     res.status(200).json({ message: 'Subscription cancelled successfully' });
 }
 
 module.exports = {
     getAllSkits,
+    getAllCreators,
     getSkit,
     likeSkit,
     activateSubscription,

@@ -8,6 +8,7 @@ const optionalAuthMiddleware = require('../middleware/optionalAuth');
 
 const {
     getAllSkits,
+    getAllCreators,
     getSkit,
     likeSkit,
     activateSubscription,
@@ -15,16 +16,17 @@ const {
 } = require('../controllers/fanController');
 
 router.get('/skits', getAllSkits);
+router.get('/creators', getAllCreators);
 router.get('/skits/:id', optionalAuthMiddleware, getSkit);
 router.post('/skits/:id/like', authenticateUser, likeSkit);
 router.post(
-    '/subscriptions', 
+    '/subscribe/:creatorProfileId', 
     authenticateUser, 
     authenticateRole('fan', 'brand'), 
     activateSubscription
 );
 router.delete(
-    '/subscriptions/:id', 
+    '/unsubscribe/:id', 
     authenticateUser, 
     authenticateRole('fan', 'brand'), 
     cancelSubscription
