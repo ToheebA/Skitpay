@@ -2,7 +2,7 @@ const Creator_Profile = require('../models/Creator_Profile');
 const Subscription = require('../models/Subscription');
 const Skit = require('../models/Skit');
 const User = require('../models/User');
-const { UnauthenticatedError, NotFoundError } = require('../errors');
+const { UnauthenticatedError, NotFoundError, BadRequestError } = require('../errors');
 
 const getAllSkits = async (req, res) => {
     const { sort, niche, visibility } = req.query;
@@ -163,13 +163,28 @@ const activateSubscription = async (req, res) => {
     if (existingSubscription) {
         throw new BadRequestError('You are already subscribed to this creator');
     }
+    const cancelledSubscription = await Subscription.findOne({
+        fan: userId,
+        creator: creatorProfile.user,
+        status: 'cancelled'
+    })
+    if (cancelledSubscription) {
+        cancelledSubscription.status = 'active';
+        cancelledSubscription.startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 30);
+        cancelledSubscription.endDate = endDate;
+        cancelledSubscription.amount = creatorProfile.subscriptionPrice;
+        await cancelledSubscription.save();
+        return res.status(200).json({ msg: 'Subscription reactivated successfully', subscription: cancelledSubscription });
+    }
     const subscriptionPrice = creatorProfile.subscriptionPrice;
     const subscription = await Subscription.create({
         fan: userId,
         creator: creatorProfile.user,
         amount: subscriptionPrice
     })
-    res.status(201).json({ subscription });
+    res.status(201).json({ msg: 'Subscription activated successfully', subscription });
 }
 
 const cancelSubscription = async (req, res) => {
