@@ -10,6 +10,7 @@ const connectDB = require('./db/connect');
 const authRouter = require('./routes/auth');
 const creatorRouter = require('./routes/creator');
 const fanRouter = require('./routes/fan');
+const paymentRouter = require('./routes/payment');
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
@@ -20,6 +21,7 @@ app.use(cors());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/creator', creatorRouter);
 app.use('/api/v1', fanRouter);
+app.use('/api/v1/payments', paymentRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
