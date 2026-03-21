@@ -1,7 +1,7 @@
 const Creator_Profile = require('../models/Creator_Profile');
 const Subscription = require('../models/Subscription');
 const Skit = require('../models/Skit');
-const User = require('../models/User');
+const { StatusCodes } = require('http-status-codes');
 const { UnauthenticatedError, NotFoundError, BadRequestError } = require('../errors');
 
 const getAllSkits = async (req, res) => {
@@ -33,7 +33,7 @@ const getAllSkits = async (req, res) => {
 
     result = result.skip(skip).limit(limit);
     const skits = await result;
-    res.status(200).json({ skits, nbHits: skits.length });
+    res.status(StatusCodes.OK).json({ skits, nbHits: skits.length });
 }
 
 const getAllCreators = async (req, res) => {
@@ -57,7 +57,7 @@ const getAllCreators = async (req, res) => {
     const skip = (page - 1) * limit;
     result = result.skip(skip).limit(limit);
     const creators = await result;
-    res.status(200).json({ creators, nbHits: creators.length });
+    res.status(StatusCodes.OK).json({ creators, nbHits: creators.length });
 }
 
 const getSkit = async (req, res) => {
@@ -94,7 +94,7 @@ const getSkit = async (req, res) => {
                 { _id: skitId },
                 { $inc: { viewCount: 1 } },
             )
-            return res.status(200).json({ skit });
+            return res.status(StatusCodes.OK).json({ skit });
         }
     };
 
@@ -103,7 +103,7 @@ const getSkit = async (req, res) => {
             { _id: skitId },
             { $inc: { viewCount: 1 } },
         )
-        return res.status(200).json({ skit });
+        return res.status(StatusCodes.OK).json({ skit });
     };
 }
 
@@ -133,7 +133,17 @@ const likeSkit = async (req, res) => {
         message = 'Skit liked successfully';
     }
     const updatedSkit = await Skit.findById(skitId);
-    res.status(200).json({ 
+
+    const io = req.app.get('io');
+    const creatorProfile = await Creator_Profile.findById(skit.createdBy);
+    if (creatorProfile.user.toString() !== userId && message === 'Skit liked successfully') {
+        io.to(creatorProfile.user.toString()).emit('notification', {
+        type: 'new_like',
+        message: `Your skit ${skit.title} just got a new like!`
+    })
+    }
+
+    res.status(StatusCodes.OK).json({ 
         msg: message,
         likes: updatedSkit.likes.length
     });
@@ -150,6 +160,10 @@ const activateSubscription = async (req, res) => {
      });
     if (!creatorProfile) {
         throw new NotFoundError('Creator profile not found');
+    }
+    const fan = await User.findById(userId);
+    if (!fan) {
+        throw new NotFoundError('User not found');
     }
     
     if (userId === creatorProfile.user.toString()) {
@@ -168,23 +182,38 @@ const activateSubscription = async (req, res) => {
         creator: creatorProfile.user,
         status: 'cancelled'
     })
+
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 30);
+    const io = req.app.get('io');
+
     if (cancelledSubscription) {
         cancelledSubscription.status = 'active';
-        cancelledSubscription.startDate = new Date();
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 30);
+        cancelledSubscription.startDate = startDate;
         cancelledSubscription.endDate = endDate;
         cancelledSubscription.amount = creatorProfile.subscriptionPrice;
         await cancelledSubscription.save();
-        return res.status(200).json({ msg: 'Subscription reactivated successfully', subscription: cancelledSubscription });
+        io.to(creatorProfile.user.toString()).emit('notification', {
+            type: 'new_subscriber',
+            message: `${fan.name} just resubscribed to you!`
+        })
+        return res.status(StatusCodes.OK).json({ msg: 'Subscription reactivated successfully', subscription: cancelledSubscription });
     }
     const subscriptionPrice = creatorProfile.subscriptionPrice;
     const subscription = await Subscription.create({
         fan: userId,
         creator: creatorProfile.user,
-        amount: subscriptionPrice
+        amount: subscriptionPrice,
+        startDate: startDate,
+        endDate: endDate,
+        status: 'active'
     })
-    res.status(201).json({ msg: 'Subscription activated successfully', subscription });
+    io.to(creatorProfile.user.toString()).emit('notification', {
+        type: 'new_subscriber',
+        message: `${fan.name} just subscribed to you!`
+    })
+    res.status(StatusCodes.CREATED).json({ msg: 'Subscription activated successfully', subscription });
 }
 
 const cancelSubscription = async (req, res) => {
@@ -202,7 +231,7 @@ const cancelSubscription = async (req, res) => {
     }
     subscription.status = 'cancelled';
     await subscription.save();
-    res.status(200).json({ message: 'Subscription cancelled successfully' });
+    res.status(StatusCodes.OK).json({ message: 'Subscription cancelled successfully' });
 }
 
 module.exports = {

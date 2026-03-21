@@ -4,6 +4,9 @@ const cors = require('cors');
 
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
+const initializeSocket = require('./config/socket');
+const io = initializeSocket(server);
 
 const connectDB = require('./db/connect');
 
@@ -15,6 +18,8 @@ const { webhookHandler } = require('./controllers/paymentController');
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
+app.set('io', io);
 
 app.post('/api/v1/payments/webhook',
     express.raw({ type: 'application/json' }),
@@ -37,7 +42,7 @@ const port = process.env.PORT || 3000;
 const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI);
-        app.listen(port, () => {
+        server.listen(port, () => {
             console.log(`Server is listening on port ${port}...`)
         });
     } catch (error) {

@@ -143,6 +143,19 @@ const uploadSkit =  async (req, res) => {
     req.body.createdBy = profile._id;
     req.body.niche = profile.niche;
     const skit = await Skit.create(req.body);
+    const io = req.app.get('io');
+    const subscriptions = await Subscription.find({ 
+        creator: userId, 
+        status: 'active' 
+    }).populate('fan', 'name');
+    
+    subscriptions.forEach(sub => {
+        io.to(sub.fan._id.toString()).emit('notification', {
+            type: 'new_skit',
+            message: `Hello ${sub.fan.name}, new skit uploaded: ${skit.title}!`
+        })
+    })
+
     res.status(StatusCodes.CREATED).json({ skit });
 }
 
