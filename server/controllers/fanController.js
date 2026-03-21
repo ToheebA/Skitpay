@@ -1,6 +1,7 @@
 const Creator_Profile = require('../models/Creator_Profile');
 const Subscription = require('../models/Subscription');
 const Skit = require('../models/Skit');
+const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { UnauthenticatedError, NotFoundError, BadRequestError } = require('../errors');
 
@@ -135,7 +136,10 @@ const likeSkit = async (req, res) => {
     const updatedSkit = await Skit.findById(skitId);
 
     const io = req.app.get('io');
+    console.log('io instance:', io ? 'exists' : 'undefined');
     const creatorProfile = await Creator_Profile.findById(skit.createdBy);
+    console.log('creatorProfile:', creatorProfile ? 'exists' : 'not found');
+    console.log('creatorProfile.user:', creatorProfile?.user.toString());
     if (creatorProfile.user.toString() !== userId && message === 'Skit liked successfully') {
         io.to(creatorProfile.user.toString()).emit('notification', {
         type: 'new_like',

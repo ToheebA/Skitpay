@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.io Test</title>
+</head>
+<body>
+    <h1>Socket.io Test</h1>
+    <div id="notifications"></div>
+
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+<script>
+    // paste your actual userId here
+    const userId = '69b9551b536338bc7ee289c6'
+    
+    const socket = io('http://localhost:5000', {
+        query: { userId }
+    })
+
+    socket.on('connect', () => {
+        console.log('Connected! Socket ID:', socket.id)
+        document.getElementById('notifications').innerHTML += 
+            '<p>Connected to server!</p>'
+    })
+
+    socket.on('notification', (data) => {
+        console.log('Notification received:', data)
+        document.getElementById('notifications').innerHTML += 
+            `<p>${data.message}</p>`
+    })
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server!')
+    })
+
+    socket.on('connect_error', (error) => {
+        console.log('Connection error:', error)
+    })
+</script>
+</body>
+</html>
