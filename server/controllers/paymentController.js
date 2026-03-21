@@ -1,8 +1,9 @@
 const User = require('../models/User');
 const Creator_Profile = require('../models/Creator_Profile');
+const Subscription = require('../models/Subscription');
 const axios = require('axios');
 const { StatusCodes } = require('http-status-codes');
-const { NotFoundError } = require('../errors');
+const { NotFoundError, BadRequestError } = require('../errors');
 
 const initializePayment = async (req, res) => {
     const {
@@ -54,7 +55,47 @@ const initializePayment = async (req, res) => {
 }
 
 const verifyPayment = async (req, res) => {
-    res.status(StatusCodes.OK).json({ msg: 'Payment verified successfully' });
+    const { reference } = req.params;
+
+    const response = await axios.get(
+        `https://api.paystack.co/transaction/verify/${reference}`,
+        {
+            headers: {
+                Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    )
+
+    if (response.data.data.status !== 'success') {
+        throw new BadRequestError('Payment verification failed');
+    }
+    const existingSubscription = await Subscription.findOne({
+        fan: response.data.data.metadata.userId,
+        creator: response.data.data.metadata.creatorProfileId,
+        status: 'active'
+    });
+    if (existingSubscription) {
+        throw new BadRequestError('You are already subscribed to this creator');
+    }
+        const startDate = new Date();
+        const endDate = new Date();
+        const creatorProfile = await Creator_Profile.findById(
+            response.data.data.metadata.creatorProfileId
+        );
+        if (!creatorProfile) {
+            throw new NotFoundError(`No creator profile found with id ${response.data.data.metadata.creatorProfileId}`);
+        }
+        const { userId } = response.data.data.metadata;
+        const subscription = await Subscription.create({
+        fan: userId,
+        creator: creatorProfile.user,
+        amount: response.data.data.amount / 100,
+        status: 'active',
+        startDate: startDate,
+        endDate: endDate.setDate(endDate.getDate() + 30)
+    })
+    res.status(StatusCodes.OK).json({ msg: 'Payment verified successfully', subscription });
 }
 
 module.exports = {
