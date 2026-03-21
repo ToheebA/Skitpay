@@ -11,9 +11,15 @@ const authRouter = require('./routes/auth');
 const creatorRouter = require('./routes/creator');
 const fanRouter = require('./routes/fan');
 const paymentRouter = require('./routes/payment');
+const { webhookHandler } = require('./controllers/paymentController');
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
+app.post('/api/v1/payments/webhook',
+    express.raw({ type: 'application/json' }),
+    webhookHandler
+);
 
 app.use(express.json());
 app.use(cors());
