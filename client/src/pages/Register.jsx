@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { registerUser } from '../api/auth'
 import { jwtDecode } from 'jwt-decode'
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d\W]{8,}$/
+
 const Register = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
@@ -19,6 +22,19 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        if (!formData.name || !formData.email || !formData.password || !formData.location) {
+            setError('Please fill in all fields')
+            return
+        }
+        if (!emailRegex.test(formData.email)) {
+            setError('Please provide a valid email address')
+            return
+        }
+        if (!passwordRegex.test(formData.password)) {
+            setError('Password must be at least 8 characters and include uppercase, lowercase, number and special character')
+            return
+        }
         setIsLoading(true)
         try {
             const response = await registerUser(formData)
@@ -58,7 +74,7 @@ const Register = () => {
                     <label className="text-gray-700 font-medium">Email</label>
                     <input 
                         className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2" 
-                        type="email" 
+                        type="text" 
                         placeholder="Email" 
                         value={formData.email} 
                         onChange={(e) => setFormData({...formData, 
@@ -84,6 +100,9 @@ const Register = () => {
                             {showPassword ? '🙈' : '👁️'}
                         </button>
                     </div>
+                    <p className="text-xs text-gray-400">
+                        Min 8 characters with uppercase, lowercase, number and special character (@$!%*?&)
+                    </p>
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-gray-700 font-medium">Role</label>

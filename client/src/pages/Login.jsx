@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { loginUser } from '../api/auth'
 import { jwtDecode } from 'jwt-decode'
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 const Login = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
@@ -16,6 +18,15 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        if (!formData.email || !formData.password) {
+            setError('Please fill in all fields')
+            return
+        }
+        if (!emailRegex.test(formData.email)) {
+            setError('Please provide a valid email address')
+            return
+        }
         setIsLoading(true)
         try {
             const response = await loginUser(formData)
@@ -44,7 +55,7 @@ const Login = () => {
                     <label className="text-gray-700 font-medium">Email</label>
                     <input
                         className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2" 
-                        type="email" 
+                        type="text"
                         placeholder="Email" 
                         value={formData.email} 
                         onChange={(e) => setFormData({...formData, 
@@ -52,10 +63,11 @@ const Login = () => {
                     />
                 </div>
                 <div className="flex flex-col gap-1">
+                    <label className="text-gray-700 font-medium">Password</label>
                     <div className="relative">
                         <input 
                             className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2" 
-                            type={showPassword ? 'text' : 'password'} 
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Password" 
                             value={formData.password} 
                             onChange={(e) => setFormData({...formData, 

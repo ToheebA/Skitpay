@@ -9,6 +9,7 @@ import CreatorProfile from './pages/CreatorProfile'
 import CreatorDashboard from './pages/CreatorDashboard'
 import FanDashboard from './pages/FanDashboard'
 import NotFound from './pages/NotFound'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -21,8 +22,16 @@ function App() {
         <Route path="/creators/:id" element={<CreatorProfile />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/creator/dashboard" element={<CreatorDashboard />} />
-        <Route path="/fan/dashboard" element={<FanDashboard />} />
+        <Route path="/creator/dashboard" element={
+          <ProtectedRoute allowedRoles={['creator']}>  
+            <CreatorDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/fan/dashboard" element={
+          <ProtectedRoute allowedRoles={['fan', 'brand']}>
+            <FanDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
