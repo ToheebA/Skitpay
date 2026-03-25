@@ -10,10 +10,12 @@ import CreatorDashboard from './pages/CreatorDashboard'
 import FanDashboard from './pages/FanDashboard'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
+import Navbar from './components/Navbar'
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/browse" element={<BrowseSkits />} />
