@@ -11,6 +11,7 @@ import FanDashboard from './pages/FanDashboard'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         } />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
