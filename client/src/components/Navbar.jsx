@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
     const { user, logout } = useAuth()
     return (
-        <nav className="flex items-center justify-between px-8 py-4 mb-2 bg-white shadow-sm">    
+        <nav className="flex items-center justify-between px-8 py-4 bg-white shadow-sm">    
             <Link to="/" className="text-2xl font-bold text-purple-600">
                 SkitPay
             </Link>
