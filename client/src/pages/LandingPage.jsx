@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const LandingPage = () => {
+    const [activeTab, setActiveTab] = useState('creator')
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center justify-center text-center px-6 py-3">
             <p className="text-4xl mb-6 animate-bounce">
@@ -112,6 +114,77 @@ const LandingPage = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+            <section className="py-20 px-6 bg-white">
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                            How It Works
+                    </h2>
+                    <p className="text-gray-500 text-lg">
+                        Get started in 3 simple steps
+                    </p>
+                </div>
+                <div className="flex justify-center gap-4 mb-12">
+                    <button 
+                        onClick={() => setActiveTab('creator')}
+                        className={`px-6 py-3 rounded-full font-bold transition-colors duration-200 cursor-pointer
+                            ${activeTab === 'creator'
+                                ? 'bg-purple-600 text-white'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                    >
+                        For Creators
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('fan')}
+                        className={`px-6 py-3 rounded-full font-bold transition-colors duration-200 cursor-pointer
+                            ${activeTab === 'fan' 
+                                ? 'bg-purple-600 text-white' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                    >
+                        For Fans
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    {activeTab === 'creator' ? (
+                        <>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">1</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Create Profile</h4>
+                                <p className="text-gray-500">Set up your bio, niche and subscription price</p>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">2</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Upload Exclusive Skits</h4>
+                                <p className="text-gray-500">Upload your skit video and a captivating thumbnail</p>     
+                            </div>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">3</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Get Paid</h4>
+                                <p className="text-gray-500">Loyal fans subscribe and brands reach out</p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">1</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Browse Creators</h4>
+                                <p className="text-gray-500">Find your favourite skit makers</p>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">2</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Subscribe</h4>
+                                <p className="text-gray-500">Pay to access exclusive content</p>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl">
+                                <span className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">3</span>
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">Enjoy</h4>
+                                <p className="text-gray-500">Watch exclusive skits, engage directly</p>
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
         </div>
