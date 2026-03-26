@@ -31,5 +31,6 @@ router.route('/skits')
 router.route('/skits/:id')
     .patch(updateSkit)
     .delete(deleteSkit);
+router.get('/stats', getCreatorStats)
 
 module.exports = router;

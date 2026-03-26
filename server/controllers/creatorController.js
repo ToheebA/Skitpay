@@ -248,6 +248,30 @@ const deleteSkit =  async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: 'Skit deleted successfully' });
 }
 
+const getCreatorStats = async (req, res) => {
+    const { userId } = req.user
+    const profile = await Creator_Profile.findOne({ user: userId })
+
+    const subscribers = await Subscription.countDocuments({
+        creator: userId,
+        status: 'active'
+    })
+
+    const skits = await Skit.find({ createdBy: profile._id })
+    const totalViews = skits.reduce((sum, skit) => sum + skit.viewCount, 0)
+
+    const earnings = await Subscription.aggregate([
+        { $match: { creator: userId, status: 'active' } },
+        { $group: { _id: null, total: { $sum: 'amount' } } }
+    ])
+
+    res.status(StatusCodes.OK).json({
+        subscribers,
+        totalViews,
+        totalEarnings: earnings[0]?.total || 0
+    })
+}
+
 module.exports = { 
     createProfile, 
     getProfile, 

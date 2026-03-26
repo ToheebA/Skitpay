@@ -12,6 +12,9 @@ import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import UploadSkit from './pages/UploadSkit'
+import EditProfile from './pages/EditProfile'
+import ManageSkits from './pages/ManageSkits'
 
 function App() {
   return (
@@ -28,6 +31,21 @@ function App() {
         <Route path="/creator/dashboard" element={
           <ProtectedRoute allowedRoles={['creator']}>  
             <CreatorDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/creator/upload" element={
+          <ProtectedRoute allowedRoles={['creator']}>  
+            <UploadSkit />
+          </ProtectedRoute>
+        } />
+        <Route path="/creator/profile/edit" element={
+          <ProtectedRoute allowedRoles={['creator']}>  
+            <EditProfile />
+          </ProtectedRoute>
+        } />
+        <Route path="/creator/skits" element={
+          <ProtectedRoute allowedRoles={['creator']}>  
+            <ManageSkits />
           </ProtectedRoute>
         } />
         <Route path="/fan/dashboard" element={
