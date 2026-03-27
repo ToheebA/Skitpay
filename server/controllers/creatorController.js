@@ -18,12 +18,11 @@ const getProfile =  async (req, res) => {
     const profile = await Creator_Profile.findOne({
         user: userId,
         isActive: true
-    });
+    }).populate('user', 'name email location');
 
     if (!profile) {
         throw new NotFoundError(`No profile found for user ${userId}`);
     }
-
     res.status(StatusCodes.OK).json({ profile });
 }
 
@@ -137,6 +136,10 @@ const uploadSkit =  async (req, res) => {
     if (!profile) {
         throw new NotFoundError('No active profile found');
     };
+
+    if (req.body.tags) {
+        req.body.tags = req.body.tags.split(',').map(tag => tag.trim())
+    }
 
     req.body.videoUrl = videoUrl;
     req.body.thumbnailUrl = thumbnailUrl;
@@ -257,6 +260,10 @@ const getCreatorStats = async (req, res) => {
         status: 'active'
     })
 
+    const totalUploads = await Skit.countDocuments({
+        createdBy: profile._id
+    })
+
     const skits = await Skit.find({ createdBy: profile._id })
     const totalViews = skits.reduce((sum, skit) => sum + skit.viewCount, 0)
 
@@ -268,7 +275,8 @@ const getCreatorStats = async (req, res) => {
     res.status(StatusCodes.OK).json({
         subscribers,
         totalViews,
-        totalEarnings: earnings[0]?.total || 0
+        totalEarnings: earnings[0]?.total || 0,
+        totalUploads
     })
 }
 
@@ -282,4 +290,5 @@ module.exports = {
     getSkits,
     updateSkit, 
     deleteSkit,
+    getCreatorStats
 }

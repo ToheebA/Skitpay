@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCreatorProfile, getCreatorStats } from '../api/creator'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 
 const CreatorDashboard = () => {
@@ -8,6 +9,7 @@ const CreatorDashboard = () => {
     const [stats, setStats] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
+    const { user } = useAuth()
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -35,7 +37,7 @@ const CreatorDashboard = () => {
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">
-                    Welcome back, {profile.name}! 👋
+                    Welcome back, {user.name}! 👋
                 </h1>
                 <p className="text-gray-500 mt-1">
                     Here's what's happening with your account
@@ -53,6 +55,12 @@ const CreatorDashboard = () => {
                     <p className="text-gray-500 text-sm mb-1">Total Views</p>
                     <h3 className="text-3xl font-bold text-purple-600">
                         {stats?.totalViews || 0}
+                    </h3>
+                </div>
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <p className="text-gray-500 text-sm mb-1">Uploaded Videos</p>
+                    <h3 className="text-3xl font-bold text-purple-600">
+                        {stats?.totalUploads}
                     </h3>
                 </div>
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">

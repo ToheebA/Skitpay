@@ -30,17 +30,6 @@ const SkitSchema = new mongoose.Schema({
         enum: ['free', 'paid'],
         default: 'free'
     },
-    price: {
-        type: Number,
-        default: 0,
-        validate: {
-            validator: function(value) {
-                return this.visibility === 'paid' && value <= 0 ? false : true;
-            },
-            message: 'Please provide a price'
-
-        }
-    },
     tags: [String],
     likes: [{ type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

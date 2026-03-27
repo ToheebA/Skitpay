@@ -14,6 +14,7 @@ const {
     getSkits,
     updateSkit,
     deleteSkit,
+    getCreatorStats
 } = require('../controllers/creatorController');
 
 router.use(authenticateUser);

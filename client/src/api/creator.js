@@ -15,9 +15,11 @@ export const deactivateProfile = () =>
 export const getCreatorSkits = () => 
     API.get('/creator/skits')
 
-export const uploadSkit = (formData) =>
+export const uploadSkit = (formData, onUploadProgress) =>
     API.post('/creator/skits', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+        onUploadProgress
     })
 
 export const updateSkit = (skitId, skitData) => 
