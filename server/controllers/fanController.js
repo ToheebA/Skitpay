@@ -6,16 +6,27 @@ const { StatusCodes } = require('http-status-codes');
 const { UnauthenticatedError, NotFoundError, BadRequestError } = require('../errors');
 
 const getAllSkits = async (req, res) => {
-    const { sort, niche, visibility } = req.query;
+    const { sort, fields, niche, visibility, search } = req.query;
     const queryObject = { isActive: true };
 
-    if (niche) {
-        queryObject.niche = niche;
-    };
+    if (niche) queryObject.niche = niche
+    if (visibility) queryObject.visibility = visibility
+    if (search) {
+        const users = await User.find({
+            name: { $regex: search, $options: 'i' }
+        })
+        const userIds = users.map(u => u._id)
 
-    if (visibility) {
-        queryObject.visibility = visibility;
-    };
+        const profiles = await Creator_Profile.find({
+            user: { $in: userIds },
+            isActive: true
+        })
+        const profileIds = profiles.map(p => p._id)
+        queryObject.$or = [ 
+            { title: { $regex: search, $options: 'i' } },
+            { createdBy: { $in: profileIds } }
+        ]
+    }
     
     let result = Skit.find(queryObject);
 
@@ -26,7 +37,12 @@ const getAllSkits = async (req, res) => {
         result = result.sort('-createdAt')
     }
 
-    result = result.select('title description niche thumbnailUrl visibility price createdBy likes viewCount createdAt');
+    if (fields) {
+        const fieldsList = fields.split(',').join(' ')
+        result = result.select(fieldsList)
+    } else {
+        result = result.select('title thumbnailUrl niche visibility viewCount likes createdBy')
+    }
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
@@ -34,7 +50,8 @@ const getAllSkits = async (req, res) => {
 
     result = result.skip(skip).limit(limit);
     const skits = await result;
-    res.status(StatusCodes.OK).json({ skits, nbHits: skits.length });
+    const totalSkits = await Skit.countDocuments(queryObject)
+    res.status(StatusCodes.OK).json({ skits, nbHits: totalSkits });
 }
 
 const getAllCreators = async (req, res) => {
@@ -136,10 +153,7 @@ const likeSkit = async (req, res) => {
     const updatedSkit = await Skit.findById(skitId);
 
     const io = req.app.get('io');
-    console.log('io instance:', io ? 'exists' : 'undefined');
     const creatorProfile = await Creator_Profile.findById(skit.createdBy);
-    console.log('creatorProfile:', creatorProfile ? 'exists' : 'not found');
-    console.log('creatorProfile.user:', creatorProfile?.user.toString());
     if (creatorProfile.user.toString() !== userId && message === 'Skit liked successfully') {
         io.to(creatorProfile.user.toString()).emit('notification', {
         type: 'new_like',
