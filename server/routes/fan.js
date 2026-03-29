@@ -12,11 +12,13 @@ const {
     getSkit,
     likeSkit,
     activateSubscription,
-    cancelSubscription
+    cancelSubscription,
+    getSubscriptions
 } = require('../controllers/fanController');
 
 router.get('/skits', getAllSkits);
 router.get('/creators', getAllCreators);
+router.get('/subscriptions', authenticateUser, getSubscriptions)
 router.get('/skits/:id', optionalAuthMiddleware, getSkit);
 router.post('/skits/:id/like', authenticateUser, likeSkit);
 router.post(

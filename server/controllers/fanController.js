@@ -238,11 +238,21 @@ const cancelSubscription = async (req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Subscription cancelled successfully' });
 }
 
+const getSubscriptions = async (req, res) => {
+    const { userId } = req.user
+    const subscriptions = await Subscription.find({
+        fan: userId,
+        status: 'active'
+    }).populate('creator', 'name')
+    res.status(StatusCodes.OK).json({ subscriptions, count: subscriptions.length })
+}
+
 module.exports = {
     getAllSkits,
     getAllCreators,
     getSkit,
     likeSkit,
     activateSubscription,
-    cancelSubscription
+    cancelSubscription,
+    getSubscriptions
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCreatorSkits, deleteSkit } from '../api/creator'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const ManageSkits = () => {
     const [skits, setSkits] = useState([])
