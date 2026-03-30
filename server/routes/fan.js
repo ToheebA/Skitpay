@@ -22,13 +22,13 @@ router.get('/subscriptions', authenticateUser, getSubscriptions)
 router.get('/skits/:id', optionalAuthMiddleware, getSkit);
 router.post('/skits/:id/like', authenticateUser, likeSkit);
 router.post(
-    '/subscribe/:creatorProfileId', 
+    '/subscriptions/:creatorProfileId', 
     authenticateUser, 
     authenticateRole('fan', 'brand'), 
     activateSubscription
 );
 router.delete(
-    '/unsubscribe/:id', 
+    '/subscriptions/:id', 
     authenticateUser, 
     authenticateRole('fan', 'brand'), 
     cancelSubscription

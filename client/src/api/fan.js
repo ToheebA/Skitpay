@@ -15,7 +15,7 @@ export const likeSkit = (skitId) =>
 export const getSubscriptions = (params) =>
     API.get('/subscriptions', { params })
 
-export const activateSubscription = (creatorProfileId) =>
+export const activateSubscription = (creatorProfileId) => 
     API.post(`/subscriptions/${creatorProfileId}`)
 
 export const cancelSubscription = (subscriptionId) =>

@@ -55,12 +55,19 @@ const getAllSkits = async (req, res) => {
 }
 
 const getAllCreators = async (req, res) => {
-    const { niche, sort } = req.query;
+    const { niche, sort, search } = req.query;
     const queryObject = {};
     queryObject.isActive = true;
 
     if (niche) {
         queryObject.niche = niche;
+    }
+    if (search) {
+        const users = await User.find({
+            name: { $regex: search, $options: 'i' }
+        })
+        const userIds = users.map(u => u._id)
+        queryObject.user = { $in: userIds }
     }
 
     let result = Creator_Profile.find(queryObject).populate('user', 'name');
@@ -75,7 +82,8 @@ const getAllCreators = async (req, res) => {
     const skip = (page - 1) * limit;
     result = result.skip(skip).limit(limit);
     const creators = await result;
-    res.status(StatusCodes.OK).json({ creators, nbHits: creators.length });
+    const totalCreators = await Creator_Profile.countDocuments(queryObject)
+    res.status(StatusCodes.OK).json({ creators, nbHits: totalCreators });
 }
 
 const getSkit = async (req, res) => {
