@@ -2,6 +2,7 @@ import { getAllCreators, activateSubscription, getSubscriptions } from '../api/f
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import useDebounce from '../hooks/useDebounce'
 
 const Creators = () => {
     const [creators, setCreators] = useState([])
@@ -9,6 +10,7 @@ const Creators = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [search, setSearch] = useState('')
+    const debouncedSearch = useDebounce(search, 500)
     const [totalCreators, setTotalCreators] = useState(0)
     const { user } = useAuth()
     const navigate = useNavigate()
@@ -22,7 +24,7 @@ const Creators = () => {
         const fetchCreators = async () => {
             try {
                 const [creatorsRes, subscriptionsRes] = await Promise.all([
-                    getAllCreators({ ...filters, search }),
+                    getAllCreators({ ...filters, search: debouncedSearch }),
                     user ? getSubscriptions() : Promise.resolve({ data: { subscriptions: [] } }) 
                 ])
                 setCreators(creatorsRes.data.creators)
@@ -38,7 +40,7 @@ const Creators = () => {
             }
         }
         fetchCreators()
-    }, [filters, search])
+    }, [filters, debouncedSearch])
 
     const isSubscribed = (creatorUserId) => {
         return subscribedCreatorIds.includes(creatorUserId)

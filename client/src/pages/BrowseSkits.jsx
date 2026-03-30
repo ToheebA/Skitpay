@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { getAllSkits } from '../api/fan'
 import { Link } from 'react-router-dom'
+import useDebounce from '../hooks/useDebounce'
 
 const BrowseSkits = () => {
     const [skits, setSkits] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [search, setSearch] = useState('')
+    const debouncedSearch = useDebounce(search, 500)
     const [totalSkits, setTotalSkits] = useState(0)
     const [filters, setFilters] = useState({
         niche: '',
@@ -20,7 +22,7 @@ const BrowseSkits = () => {
             try {
                 const response = await getAllSkits({
                     ...filters,
-                    search
+                    search: debouncedSearch
                 })
                 setSkits(response.data.skits)
                 setTotalSkits(response.data.nbHits)
@@ -31,7 +33,7 @@ const BrowseSkits = () => {
             }
         }
         fetchSkits()
-    }, [filters, search])
+    }, [filters, debouncedSearch])
 
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error}</div>

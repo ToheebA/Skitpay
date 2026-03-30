@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Creator_Profile = require('../models/Creator_Profile');
 const Skit = require('../models/Skit');
 const Subscription = require('../models/Subscription');
@@ -253,24 +254,48 @@ const deleteSkit =  async (req, res) => {
 
 const getCreatorStats = async (req, res) => {
     const { userId } = req.user
+    console.log('userId:', userId)
+
     const profile = await Creator_Profile.findOne({ user: userId })
+    console.log('profile:', profile)
 
     const subscribers = await Subscription.countDocuments({
         creator: userId,
         status: 'active'
     })
+    console.log('subscribers:', subscribers)
 
     const totalUploads = await Skit.countDocuments({
         createdBy: profile._id
     })
 
     const skits = await Skit.find({ createdBy: profile._id })
+    console.log('skits:', skits.length)
+
     const totalViews = skits.reduce((sum, skit) => sum + skit.viewCount, 0)
 
     const earnings = await Subscription.aggregate([
-        { $match: { creator: userId, status: 'active' } },
-        { $group: { _id: null, total: { $sum: 'amount' } } }
+        { 
+            $match: { 
+                creator: new mongoose.Types.ObjectId(userId), 
+                status: 'active' 
+            } 
+        },
+        { 
+            $group: { 
+                _id: null, 
+                total: { $sum: '$amount' } 
+            } 
+        }
     ])
+    console.log('earnings:', earnings)
+
+    const matchTest = await Subscription.find({ 
+        creator: userId, 
+        status: 'active' 
+    })
+    console.log('matchTest:', matchTest)
+    console.log('matchTest length:', matchTest.length)
 
     res.status(StatusCodes.OK).json({
         subscribers,
