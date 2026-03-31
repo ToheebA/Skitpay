@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCreatorProfile, getCreatorStats } from '../api/creator'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 
@@ -10,6 +10,7 @@ const CreatorDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const { user } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -36,7 +37,11 @@ const CreatorDashboard = () => {
 
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error}</div>
-    if (!profile) return <div>Create your profile first!</div>
+    if (!profile) {
+        navigate('/creator/profile/create')
+        return null
+    }
+    
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">

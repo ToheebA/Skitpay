@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import BrowseSkits from './pages/BrowseSkits'
 import SingleSkit from './pages/SingleSkit'
 import Creators from './pages/Creators'
+import CreateProfile from './pages/CreateProfile'
 import CreatorProfile from './pages/CreatorProfile'
 import CreatorDashboard from './pages/CreatorDashboard'
 import FanDashboard from './pages/FanDashboard'
@@ -29,6 +30,11 @@ function App() {
         <Route path="/creators/:id" element={<CreatorProfile />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/creator/profile/create" element={
+          <ProtectedRoute allowedRoles={['creator']}>
+              <CreateProfile />
+          </ProtectedRoute>
+      } />
         <Route path="/creator/dashboard" element={
           <ProtectedRoute allowedRoles={['creator']}>  
             <CreatorDashboard />

@@ -10,6 +10,9 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d
 const Register = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -17,9 +20,7 @@ const Register = () => {
         role: 'fan',
         location: ''
     })
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
@@ -41,7 +42,7 @@ const Register = () => {
             const { token } = response.data
             login(token)
             const decodedUser = jwtDecode(token)
-            if (decodedUser.role === 'creator') navigate('/creator/dashboard')
+            if (decodedUser.role === 'creator') navigate('/creator/profile/create')
             if (decodedUser.role === 'fan') navigate('/fan/dashboard')
             if (decodedUser.role === 'brand') navigate('/brand/dashboard')
         } catch (error) {
