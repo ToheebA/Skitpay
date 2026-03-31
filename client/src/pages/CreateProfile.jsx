@@ -3,7 +3,7 @@ import { createProfile } from '../api/creator'
 import { useNavigate } from 'react-router-dom'
 
 const CreateProfile = () => {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const navigate = useNavigate()
     const [form, setForm] = useState({
@@ -35,9 +35,6 @@ const CreateProfile = () => {
             setIsLoading(false)
         }
     }
-
-    if (isLoading) return <div>Loading...</div>
-    if (error) return <div>{error}</div>
 
     return (
         <div className="min-h-screen flex flex-col gap-4 items-center justify-center mt-2">
