@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getCreatorProfile, getCreatorStats } from '../api/creator'
+import { getCreatorProfile, getCreatorStats, deactivateProfile } from '../api/creator'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -8,8 +8,10 @@ const CreatorDashboard = () => {
     const [profile, setProfile] = useState(null)
     const [stats, setStats] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [isDeactivateModal, setIsDeactivateModal] = useState(false)
     const [error, setError] = useState('')
     const { user } = useAuth()
+    const { logout } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -34,6 +36,16 @@ const CreatorDashboard = () => {
         }
         fetchProfile()
     }, [])
+
+    const handleDeactivate = async () => {
+        try {
+            await deactivateProfile()
+            logout()
+            navigate('/')
+        } catch (error) {
+            setError(error.response?.data?.msg || 'Failed to deactivate profile')
+        }
+    }
 
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error}</div>
@@ -128,6 +140,48 @@ const CreatorDashboard = () => {
                     </Link>
                 </div>
             </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-red-100 mt-8">
+                <h2 className="text-xl font-bold text-red-500 mb-2">
+                    Danger Zone
+                </h2>
+                <p className="text-gray-500 text-sm mb-4">
+                    Deactivating your account will remove your profile from SkitPay.
+                    If you have active subscribers you will have a 30 day grace period.
+                </p>
+                <button
+                    onClick={() => setIsDeactivateModal(true)}
+                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors duration-200 cursor-pointer"
+                >
+                    Deactivate Account
+                </button>
+            </div>
+            {isDeactivateModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-8 max-w-sm w-full">
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">
+                            Deactivate Account?
+                        </h2>
+                        <p className="text-gray-500 mb-6">
+                            This action cannot be undone! If you have active subscribers
+                            your account will remain active for 30 days.
+                        </p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={handleDeactivate}
+                                className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 cursor-pointer"
+                            >
+                                Deactivate
+                            </button>
+                            <button
+                            onClick={() => setIsDeactivateModal(false)}
+                                className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
