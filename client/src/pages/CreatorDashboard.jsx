@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getCreatorProfile, getCreatorStats, deactivateProfile } from '../api/creator'
+import { getCreatorProfile, getCreatorStats, deactivateProfile, reactivateProfile } from '../api/creator'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext'
 const CreatorDashboard = () => {
     const [profile, setProfile] = useState(null)
     const [stats, setStats] = useState(null)
+    const [scheduledDeletion, setScheduledDeletion] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isDeactivateModal, setIsDeactivateModal] = useState(false)
     const [error, setError] = useState('')
@@ -20,11 +21,25 @@ const CreatorDashboard = () => {
                     getCreatorProfile(),
                     getCreatorStats()
                 ])
-                setProfile(profileRes.data.profile)
+                const profileData = profileRes.data.profile
+
+                if (!profileData) {
+                    navigate('/creator/profile/create')
+                    return
+                }
+                if (!profileData.isActive) {
+                    navigate('/creator/profile/reactivate')
+                    return
+                }
+                if (profileData.scheduledDeletion) {
+                    setScheduledDeletion(profileData.scheduledDeletion)
+                }
+
+                setProfile(profileData)
                 setStats(statsRes.data)
             } catch(error) {
                 if (error.response?.status === 404) {
-                    setProfile(null)
+                    navigate('/creator/profile/create')
                 } else {
                     setError(error.response?.data?.msg || 'Failed to fetch profile')
 
@@ -34,11 +49,6 @@ const CreatorDashboard = () => {
             }
         }
         fetchProfile()
-
-        if (profile.data.profile && !profile.data.profile.isActive) {
-            navigate('/creator/profile/reactivate')
-            return
-        }
     }, [])
 
     const handleDeactivate = async () => {
@@ -48,6 +58,17 @@ const CreatorDashboard = () => {
             navigate('/')
         } catch (error) {
             setError(error.response?.data?.msg || 'Failed to deactivate profile')
+        }
+    }
+
+    const handleReactivate = async () => {
+        try {
+            await reactivateProfile()
+            setScheduledDeletion(null)
+            const response = await getCreatorProfile()
+            setProfile(response.data.profile)
+        } catch (error) {
+            setError(error.response?.data?.msg || 'Failed to reactivate profile')
         }
     }
 
@@ -69,6 +90,20 @@ const CreatorDashboard = () => {
                     Here's what's happening with your account
                 </p>
             </div>
+            {scheduledDeletion && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8">
+                    <p className="text-red-600 font-medium">
+                        ⚠️ Your profile is scheduled for deactivation on {new Date(scheduledDeletion).toLocaleDateString('en-NG', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </p>
+                    <p className="text-red-400 text-sm mt-1">
+                        You have active subscribers — your profile will remain active until this date.
+                    </p>
+                </div>
+            )}
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -153,11 +188,33 @@ const CreatorDashboard = () => {
                     If you have active subscribers you will have a 30 day grace period.
                 </p>
                 <button
-                    onClick={() => setIsDeactivateModal(true)}
-                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors duration-200 cursor-pointer"
+                    disabled={!!scheduledDeletion}
+                    onClick={() => !scheduledDeletion && setIsDeactivateModal(true)}
+                    className={`px-6 py-3 rounded-lg transition-colors duration-200 cursor-pointer font-medium
+                        ${scheduledDeletion 
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : 'bg-red-500 text-white hover:bg-red-600 cursor-pointer'
+                        }`}
                 >
-                    Deactivate Account
+                    {scheduledDeletion ? 'Deactivation Scheduled' : 'Deactivate Account'}
                 </button>
+                {scheduledDeletion && (
+                    <button
+                        onClick={() => handleReactivate()}
+                        className="px-6 py-3 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-200 font-medium cursor-pointer"
+                    >
+                        Cancel Deactivation 🔄
+                    </button>
+                )}
+                {scheduledDeletion && (
+                    <p className="text-gray-400 text-sm mt-2">
+                        Profile scheduled for deactivation on {new Date(scheduledDeletion).toLocaleDateString('en-NG', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </p>
+                )}
             </div>
             {isDeactivateModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

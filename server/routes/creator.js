@@ -20,12 +20,12 @@ const {
 router.use(authenticateUser);
 router.use(authenticateRole('creator'));
 
+router.patch('/profile/reactivate', reactivateProfile);
 router.route('/profile')
     .post(createProfile)
     .get(getProfile)
     .patch(updateProfile)
     .delete(deactivateProfile);
-router.patch('/profile/reactivate', reactivateProfile);
 router.route('/skits')
     .post(multiUpload, uploadSkit)
     .get(getSkits);

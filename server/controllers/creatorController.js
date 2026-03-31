@@ -52,6 +52,7 @@ const deactivateProfile = async (req, res) => {
     } = req;
     const profile = await Creator_Profile.findOne({
         user: userId,
+        isActive: true
     });
     
     if (!profile) {
@@ -95,12 +96,12 @@ const deactivateProfile = async (req, res) => {
 const reactivateProfile = async (req, res) => {
     const {
         user: { userId }
-    } = req;
+    } = req;    
 
     const profile = await Creator_Profile.findOneAndUpdate(
-       { user: userId, isActive: false },
-       { isActive: true, scheduledDeletion: null },
-       { new: true }
+        { user: userId },
+        { isActive: true, scheduledDeletion: null },
+        { new: true }
     )
 
     if (!profile) {
@@ -264,7 +265,7 @@ const getCreatorStats = async (req, res) => {
     const { userId } = req.user
     const profile = await Creator_Profile.findOne({ user: userId })
 
-    if (!profile) {
+    if (!profile || !profile.isActive) {
         return res.status(StatusCodes.OK).json({
             subscribers: 0,
             totalViews: 0,
