@@ -35,7 +35,7 @@ const SingleSkit = () => {
             setSkit({
                 ...skit,
                 likes: alreadyLiked 
-                    ? skit.likes.filter(id => id.toString() !== user.userId)  // unlike
+                    ? skit.likes.filter(id => id.toString() !== user.userId)
                     : [...skit.likes, user.userId]
             })
         } catch (error) {
@@ -49,11 +49,8 @@ const SingleSkit = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
-            
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
                 <div className="lg:col-span-2">
-                    
                     {skit.videoUrl ? (
                         <video 
                             src={skit.videoUrl} 

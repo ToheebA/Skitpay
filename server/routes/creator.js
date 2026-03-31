@@ -30,7 +30,7 @@ router.route('/skits')
     .post(multiUpload, uploadSkit)
     .get(getSkits);
 router.route('/skits/:id')
-    .patch(updateSkit)
+    .patch(multiUpload, updateSkit)
     .delete(deleteSkit);
 router.get('/stats', getCreatorStats)
 

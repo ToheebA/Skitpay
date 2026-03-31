@@ -214,6 +214,16 @@ const updateSkit = async (req, res) => {
         throw new NotFoundError('No active profile');
     }
 
+    if (req.files?.video) {
+        req.body.videoUrl = req.files.video[0].path
+    }
+    if (req.files?.thumbnail) {
+        req.body.thumbnailUrl = req.files.thumbnail[0].path
+    }
+    if (req.body.tags) {
+        req.body.tags = req.body.tags.split(',').map(tag => tag.trim())
+    }
+
     delete req.body.createdBy;
     const skit = await Skit.findOneAndUpdate(
         { _id: req.params.id, createdBy: profile._id },
@@ -254,26 +264,18 @@ const deleteSkit =  async (req, res) => {
 
 const getCreatorStats = async (req, res) => {
     const { userId } = req.user
-    console.log('userId:', userId)
-
     const profile = await Creator_Profile.findOne({ user: userId })
-    console.log('profile:', profile)
-
     const subscribers = await Subscription.countDocuments({
         creator: userId,
         status: 'active'
     })
-    console.log('subscribers:', subscribers)
 
     const totalUploads = await Skit.countDocuments({
         createdBy: profile._id
     })
 
     const skits = await Skit.find({ createdBy: profile._id })
-    console.log('skits:', skits.length)
-
     const totalViews = skits.reduce((sum, skit) => sum + skit.viewCount, 0)
-
     const earnings = await Subscription.aggregate([
         { 
             $match: { 
@@ -288,14 +290,11 @@ const getCreatorStats = async (req, res) => {
             } 
         }
     ])
-    console.log('earnings:', earnings)
 
     const matchTest = await Subscription.find({ 
         creator: userId, 
         status: 'active' 
     })
-    console.log('matchTest:', matchTest)
-    console.log('matchTest length:', matchTest.length)
 
     res.status(StatusCodes.OK).json({
         subscribers,

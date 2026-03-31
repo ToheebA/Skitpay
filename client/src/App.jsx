@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import UploadSkit from './pages/UploadSkit'
 import EditProfile from './pages/EditProfile'
 import ManageSkits from './pages/ManageSkits'
+import EditSkit from './pages/EditSkit'
 
 function App() {
   return (
@@ -46,6 +47,11 @@ function App() {
         <Route path="/creator/skits" element={
           <ProtectedRoute allowedRoles={['creator']}>  
             <ManageSkits />
+          </ProtectedRoute>
+        } />
+        <Route path="/creator/skits/:id/edit" element={
+          <ProtectedRoute allowedRoles={['creator']}>  
+            <EditSkit />
           </ProtectedRoute>
         } />
         <Route path="/fan/dashboard" element={

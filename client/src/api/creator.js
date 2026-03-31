@@ -22,8 +22,12 @@ export const uploadSkit = (formData, onUploadProgress) =>
         onUploadProgress
     })
 
-export const updateSkit = (skitId, skitData) => 
-    API.patch(`/creator/skits/${skitId}`, skitData)
+export const updateSkit = (skitId, formData, onUploadProgress) => 
+    API.patch(`/creator/skits/${skitId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+        onUploadProgress
+    })
 
 export const deleteSkit = (skitId) =>
     API.delete(`/creator/skits/${skitId}`)
