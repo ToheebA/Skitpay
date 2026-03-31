@@ -265,6 +265,15 @@ const deleteSkit =  async (req, res) => {
 const getCreatorStats = async (req, res) => {
     const { userId } = req.user
     const profile = await Creator_Profile.findOne({ user: userId })
+
+    if (!profile) {
+        return res.status(StatusCodes.OK).json({
+            subscribers: 0,
+            totalViews: 0,
+            totalEarnings: 0,
+            totalUploads: 0
+        })
+    }
     const subscribers = await Subscription.countDocuments({
         creator: userId,
         status: 'active'

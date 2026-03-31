@@ -21,7 +21,12 @@ const CreatorDashboard = () => {
                 setProfile(profileRes.data.profile)
                 setStats(statsRes.data)
             } catch(error) {
-                setError(error.response?.data?.msg || 'Failed to fetch profile')
+                if (error.response?.status === 404) {
+                    setProfile(null)
+                } else {
+                    setError(error.response?.data?.msg || 'Failed to fetch profile')
+
+                }
             } finally {
                 setIsLoading(false)
             }
