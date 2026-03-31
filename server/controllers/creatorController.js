@@ -52,7 +52,6 @@ const deactivateProfile = async (req, res) => {
     } = req;
     const profile = await Creator_Profile.findOne({
         user: userId,
-        isActive: true
     });
     
     if (!profile) {

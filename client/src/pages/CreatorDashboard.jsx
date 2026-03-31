@@ -10,8 +10,7 @@ const CreatorDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [isDeactivateModal, setIsDeactivateModal] = useState(false)
     const [error, setError] = useState('')
-    const { user } = useAuth()
-    const { logout } = useAuth()
+    const { user, logout } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
