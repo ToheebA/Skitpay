@@ -8,6 +8,7 @@ import Creators from './pages/Creators'
 import CreateProfile from './pages/CreateProfile'
 import CreatorProfile from './pages/CreatorProfile'
 import CreatorDashboard from './pages/CreatorDashboard'
+import ReactivateProfile from './pages/ReactivateProfile'
 import FanDashboard from './pages/FanDashboard'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -58,6 +59,11 @@ function App() {
         <Route path="/creator/skits/:id/edit" element={
           <ProtectedRoute allowedRoles={['creator']}>  
             <EditSkit />
+          </ProtectedRoute>
+        } />
+        <Route path="/creator/profile/reactivate" element={
+          <ProtectedRoute allowedRoles={['creator']}>
+            <ReactivateProfile />
           </ProtectedRoute>
         } />
         <Route path="/fan/dashboard" element={

@@ -12,6 +12,9 @@ export const updateCreatorProfile = (profileData) =>
 export const deactivateProfile = () => 
     API.delete('/creator/profile')
 
+export const reactivateProfile = () =>
+    API.patch('/creator/profile/reactivate')
+
 export const getCreatorSkits = () => 
     API.get('/creator/skits')
 

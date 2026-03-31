@@ -35,6 +35,11 @@ const CreatorDashboard = () => {
             }
         }
         fetchProfile()
+
+        if (profile.data.profile && !profile.data.profile.isActive) {
+            navigate('/creator/profile/reactivate')
+            return
+        }
     }, [])
 
     const handleDeactivate = async () => {

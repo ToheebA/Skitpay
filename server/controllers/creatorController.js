@@ -18,7 +18,6 @@ const getProfile =  async (req, res) => {
 
     const profile = await Creator_Profile.findOne({
         user: userId,
-        isActive: true
     }).populate('user', 'name email location');
 
     if (!profile) {
