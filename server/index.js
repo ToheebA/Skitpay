@@ -27,7 +27,12 @@ app.post('/api/v1/payments/webhook',
 );
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'https://your-app.vercel.app'
+    ]
+}));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/creator', creatorRouter);
