@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 const LandingPage = () => {
+    const { user } = useAuth()
+
     const [activeTab, setActiveTab] = useState('creator')
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center justify-center text-center px-6 py-3">
@@ -19,12 +22,21 @@ const LandingPage = () => {
                 and land brand deals — all in one place.
             </p>
             <div className="flex gap-4 mb-16">
-                <Link 
-                    to="/register?role=creator"
-                    className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
-                >
-                    Start Creating 🚀
-                </Link>
+                {user?.role === 'creator' ? (
+                    <Link 
+                        to="/creator/dashboard"
+                        className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
+                    >
+                        Go to Dashboard 🚀
+                    </Link>
+                ) : (
+                    <Link 
+                        to="/register"
+                        className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
+                    >
+                        Start Creating 🚀
+                    </Link>
+                )}
                 <Link 
                     to="/browse"
                     className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-purple-700 transition-colors duration-200"
