@@ -124,6 +124,7 @@ const Creators = () => {
                                                 <button 
                                                     onClick={(e) => {
                                                         e.stopPropagation()
+                                                        e.preventDefault()
                                                         !isSubscribed(creator.user._id) && handleSubscribe(creator._id, creator.user._id
                                                     )}}
                                                     disabled={isSubscribed(creator.user._id)}
