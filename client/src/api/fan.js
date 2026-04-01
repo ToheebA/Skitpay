@@ -3,6 +3,9 @@ import API from './axios'
 export const getAllCreators = (params) => 
     API.get('/creators', { params })
 
+export const getCreatorPublicProfile = (creatorId) =>
+    API.get(`/creators/${creatorId}`)
+
 export const getAllSkits = (params) =>
     API.get('/skits', { params })
 

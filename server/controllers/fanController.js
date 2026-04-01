@@ -86,6 +86,35 @@ const getAllCreators = async (req, res) => {
     res.status(StatusCodes.OK).json({ creators, nbHits: totalCreators });
 }
 
+const getCreatorPublicProfile = async (req, res) => {
+    const { id: creatorId } = req.params
+
+    const profile = await Creator_Profile.findOne({
+        _id: creatorId,
+        isActive: true
+    }).populate('user', 'name email')
+
+    if (!profile) {
+        throw new NotFoundError('Creator profile not found')
+    }
+
+    const skits = await Skit.find({
+        createdBy: creatorId,
+        isActive: true
+    }).select('title thumbnailUrl visibility viewCount likes niche')
+
+    const subscriberCount = await Subscription.countDocuments({
+        creator: profile.user._id,
+        status: 'active'
+    })
+
+    res.status(StatusCodes.OK).json({
+        profile,
+        skits,
+        subscriberCount
+    })
+}
+
 const getSkit = async (req, res) => {
     const {
         params: { id: skitId },
@@ -266,12 +295,28 @@ const getSubscriptions = async (req, res) => {
         fan: userId,
         status: 'active'
     }).populate('creator', 'name')
-    res.status(StatusCodes.OK).json({ subscriptions, count: subscriptions.length })
+
+    const subscriptionsWithProfile = await Promise.all(
+        subscriptions.map(async (sub) => {
+            const profile = await Creator_Profile.findOne({
+                user: sub.creator._id
+            })
+            return {
+                ...sub.toObject(),
+                creatorProfileId: profile?._id
+            }
+        })
+    )
+
+    res.status(StatusCodes.OK).json({ 
+        subscriptions: subscriptionsWithProfile, 
+        count: subscriptions.length })
 }
 
 module.exports = {
     getAllSkits,
     getAllCreators,
+    getCreatorPublicProfile,
     getSkit,
     likeSkit,
     activateSubscription,

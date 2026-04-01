@@ -9,6 +9,7 @@ const optionalAuthMiddleware = require('../middleware/optionalAuth');
 const {
     getAllSkits,
     getAllCreators,
+    getCreatorPublicProfile,
     getSkit,
     likeSkit,
     activateSubscription,
@@ -18,6 +19,7 @@ const {
 
 router.get('/skits', getAllSkits);
 router.get('/creators', getAllCreators);
+router.get('/creators/:id', getCreatorPublicProfile)
 router.get('/subscriptions', authenticateUser, getSubscriptions)
 router.get('/skits/:id', optionalAuthMiddleware, getSkit);
 router.post('/skits/:id/like', authenticateUser, likeSkit);

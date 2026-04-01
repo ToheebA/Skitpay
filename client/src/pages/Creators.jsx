@@ -1,7 +1,7 @@
 import { getAllCreators, activateSubscription, getSubscriptions } from '../api/fan'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import useDebounce from '../hooks/useDebounce'
 
 const Creators = () => {
@@ -107,27 +107,38 @@ const Creators = () => {
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             {creators.map((creator) => (
-                                <div key={creator._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                                    <div className="p-4">
-                                        <h3 className="font-bold text-gray-900 text-lg mb-1">{creator.user.name}</h3>
-                                        <p className="text-gray-500 text-sm mb-3">{creator.bio}</p>
-                                        <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium capitalize mb-3 inline-block">
-                                            {creator.niche}
-                                        </span>
-                                        <p className="text-gray-900 font-bold mb-4">₦{creator.subscriptionPrice}/month</p>
-                                        <button 
-                                            onClick={() => !isSubscribed(creator.user._id) && handleSubscribe(creator._id, creator.user._id)}
-                                            disabled={isSubscribed(creator.user._id)}
-                                            className={`w-full py-2 rounded-lg transition-colors duration-200 font-medium
-                                                ${isSubscribed(creator.user._id) 
-                                                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
-                                                    : 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
-                                                }`}
-                                        >
-                                            {isSubscribed(creator.user._id) ? 'Subscribed ✓' : 'Subscribe'}
-                                        </button>
+                                <Link to={`/creators/${creator._id}`} className="block">
+                                    <div key={creator._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                        <div className="p-4">
+                                            <Link to={`/creators/${creator._id}`}>
+                                                <h3 className="font-bold text-gray-900 text-lg mb-1 hover:text-purple-600 transition-colors duration-200">
+                                                    {creator.user.name}
+                                                </h3>
+                                            </Link>                                        
+                                            <p className="text-gray-500 text-sm mb-3">{creator.bio}</p>
+                                            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium capitalize mb-3 inline-block">
+                                                {creator.niche}
+                                            </span>
+                                            <p className="text-gray-900 font-bold mb-4">₦{creator.subscriptionPrice}/month</p>
+                                            <div className="flex gap-2">    
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        !isSubscribed(creator.user._id) && handleSubscribe(creator._id, creator.user._id
+                                                    )}}
+                                                    disabled={isSubscribed(creator.user._id)}
+                                                    className={`w-full py-2 rounded-lg transition-colors duration-200 font-medium
+                                                        ${isSubscribed(creator.user._id) 
+                                                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                                                            : 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
+                                                        }`}
+                                                >
+                                                    {isSubscribed(creator.user._id) ? 'Subscribed ✓' : 'Subscribe'}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                         <div>

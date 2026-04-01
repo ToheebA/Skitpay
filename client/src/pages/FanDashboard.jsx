@@ -90,10 +90,17 @@ const FanDashboard = () => {
                                 <p className="font-bold text-gray-900 text-xl">{sub.creator.name}</p>
                                 <p className="text-gray-900 font-bold text-lg">₦{sub.amount}/month</p>
                                 <p className="font-bold text-gray-900">Expires: {new Date(sub.endDate).toLocaleDateString('en-NG', {
-                                    day: 'numeric',
-                                    month: 'long',
-                                    year: 'numeric'
-                                })}</p>
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year: 'numeric'
+                                    })}
+                                </p>
+                                <Link
+                                    to={`/creators/${sub.creatorProfileId}`}
+                                    className="block mt-3 text-purple-600 hover:text-purple-700 font-medium text-sm"
+                                >
+                                    View Profile →
+                                </Link>
                             </div>
                             <div>
                                 <button
