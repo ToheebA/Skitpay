@@ -2,6 +2,7 @@ import { getAllCreators, activateSubscription, getSubscriptions } from '../api/f
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import useDebounce from '../hooks/useDebounce'
 
 const Creators = () => {
@@ -51,7 +52,7 @@ const Creators = () => {
         try {
             await activateSubscription(creatorProfileId)
             setSubscribedCreatorIds([...subscribedCreatorIds, creatorUserId])
-            alert('Subscribed successfully!')
+            toast.success('Subscribed successfully!')
         } catch (error) {
             setError(error.response?.data?.msg || 'Failed to subscribe')
         }
