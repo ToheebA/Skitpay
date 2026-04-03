@@ -7,60 +7,62 @@ const LandingPage = () => {
 
     const [activeTab, setActiveTab] = useState('creator')
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center justify-center text-center px-6 py-3">
-            <p className="text-4xl mb-6 animate-bounce">
-                🎬 🎭 💰 🎤
-            </p>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                Your Skits. 
-                Your Fans. 
-                Your Money.
-            </h1>
-            <p className="text-lg md:text-xl text-purple-200 max-w-2xl mb-10">
-                Nigeria's first platform built specifically for skit makers.
-                Connect with superfans, get paid for exclusive content,
-                and land brand deals — all in one place.
-            </p>
-            <div className="flex gap-4 mb-16">
-                {user?.role === 'creator' ? (
+        <div>
+            <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center justify-center text-center px-4 md:px-6">
+                <p className="text-4xl mb-6 animate-bounce">
+                    🎬 🎭 💰 🎤
+                </p>
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                    Your Skits. 
+                    Your Fans. 
+                    Your Money.
+                </h1>
+                <p className="text-lg md:text-xl text-purple-200 max-w-2xl mb-10">
+                    Nigeria's first platform built specifically for skit makers.
+                    Connect with superfans, get paid for exclusive content,
+                    and land brand deals — all in one place.
+                </p>
+                <div className="flex flex-col md:flex-row gap-4 mb-16">
+                    {user?.role === 'creator' ? (
+                        <Link 
+                            to="/creator/dashboard"
+                            className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
+                        >
+                            Go to Dashboard 🚀
+                        </Link>
+                    ) : (
+                        <Link 
+                            to="/register"
+                            className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
+                        >
+                            Start Creating 🚀
+                        </Link>
+                    )}
                     <Link 
-                        to="/creator/dashboard"
-                        className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
+                        to="/browse"
+                        className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-purple-700 transition-colors duration-200"
                     >
-                        Go to Dashboard 🚀
+                        Watch Free Skits 🎬
                     </Link>
-                ) : (
-                    <Link 
-                        to="/register"
-                        className="bg-white text-purple-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-200"
-                    >
-                        Start Creating 🚀
-                    </Link>
-                )}
-                <Link 
-                    to="/browse"
-                    className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-purple-700 transition-colors duration-200"
-                >
-                    Watch Free Skits 🎬
-                </Link>
-            </div>
-            <div className="flex gap-12 text-white">
-                <div className="flex flex-col items-center">
-                    <span className="text-3xl font-bold">500+</span> 
-                    <span className="text-purple-200">Creators</span>
                 </div>
-                <div className="w-px bg-purple-400"></div>
-                <div className="flex flex-col items-center"> 
-                    <span className="text-3xl font-bold">10,000+</span> 
-                    <span className="text-purple-200">Fans</span>
-                </div>
-                <div className="w-px bg-purple-400"></div>
-                <div className="flex flex-col items-center">
-                    <span className="text-3xl font-bold">₦50M+</span> 
-                    <span className="text-purple-200">Paid Out</span>
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12 text-white">
+                    <div className="flex flex-col items-center">
+                        <span className="text-3xl font-bold">500+</span> 
+                        <span className="text-purple-200">Creators</span>
+                    </div>
+                    <div className="hidden md:block w-px bg-purple-400"></div>
+                    <div className="flex flex-col items-center"> 
+                        <span className="text-3xl font-bold">10,000+</span> 
+                        <span className="text-purple-200">Fans</span>
+                    </div>
+                    <div className="hidden md:block w-px bg-purple-400"></div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-3xl font-bold">₦50M+</span> 
+                        <span className="text-purple-200">Paid Out</span>
+                    </div>
                 </div>
             </div>
-            <section className="py-20 px-6 mt-3 bg-gray-50">
+            <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-50">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-gray-900 mb-4">
                         Everything you need
@@ -128,7 +130,7 @@ const LandingPage = () => {
                     </div>
                 </div>
             </section>
-            <section className="py-20 px-6 bg-white">
+            <section className="py-12 md:py-20 px-4 md:px-6 bg-white">
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-bold text-gray-900 mb-4">
                             How It Works
@@ -137,7 +139,7 @@ const LandingPage = () => {
                         Get started in 3 simple steps
                     </p>
                 </div>
-                <div className="flex justify-center gap-4 mb-12">
+                <div className="flex flex-col md:flex-row justify-center gap-4 mb-12">
                     <button 
                         onClick={() => setActiveTab('creator')}
                         className={`px-6 py-3 rounded-full font-bold transition-colors duration-200 cursor-pointer
