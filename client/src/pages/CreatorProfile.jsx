@@ -2,6 +2,7 @@ import { getCreatorPublicProfile, getSubscriptions, activateSubscription } from 
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import toast from 'react-hot-toast'
 
 const CreatorProfile = () => {
     const { user } = useAuth()
@@ -43,6 +44,7 @@ const CreatorProfile = () => {
         if (!user) return navigate('/register')
         try {
             await activateSubscription(id)
+            toast.success('Subscribed successfully!')
             setIsSubscribed(true)
         } catch (error) {
             setError(error.response?.data?.msg || 'Failed to subscribe')

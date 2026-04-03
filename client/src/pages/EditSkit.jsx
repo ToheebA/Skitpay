@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { updateSkit } from '../api/creator'
 import { getSkit } from '../api/fan'
+import toast from 'react-hot-toast'
 
 const EditSkit = () => {
     const { id } = useParams()
@@ -58,6 +59,7 @@ const EditSkit = () => {
                 )
                 setUploadProgress(progress)
             })
+            toast.success('Skit updated successfully!')
             navigate('/creator/skits')
         } catch (error) {
             setError(error.response?.data?.msg || 'Unable to edit skit')

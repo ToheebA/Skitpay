@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCreatorProfile, updateCreatorProfile } from '../api/creator'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const EditProfile = () => {
     const [profile, setProfile] = useState(null)
@@ -55,6 +56,7 @@ const EditProfile = () => {
         setIsLoading(true)
         try {
             await updateCreatorProfile(form)
+            toast.success('Profile updated successfully!')
             navigate('/creator/dashboard')
         } catch (error) {
             setError(error.response?.data?.msg || 'Unable to edit profile')

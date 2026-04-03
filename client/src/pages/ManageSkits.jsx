@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCreatorSkits, deleteSkit } from '../api/creator'
 import { Link, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const ManageSkits = () => {
     const [skits, setSkits] = useState([])
@@ -32,6 +33,7 @@ const ManageSkits = () => {
     const handleDeleteConfirm = async () => {
         try {
             await deleteSkit(skitToDelete)
+            toast.success('Skit deleted successfully!')
             setSkits(skits.filter(skit => skit._id !== skitToDelete))
             setIsModal(false)
             setSkitToDelete(null)

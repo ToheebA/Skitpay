@@ -2,6 +2,7 @@ import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react'
 import { getAllSkits, getSubscriptions, cancelSubscription } from '../api/fan'
 import { Link, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const FanDashboard = () => {
     const { user } = useAuth()
@@ -39,6 +40,7 @@ const FanDashboard = () => {
     const handleDeactivateConfirm = async () => {
         try {
             await cancelSubscription(subscriptionToCancel)
+            toast.success('Subscription cancelled!')
             setSubscriptions(subscriptions.filter(subscription => subscription._id !== subscriptionToCancel))
             setIsModal(false)
             setSubscriptionToCancel(null)

@@ -1,6 +1,7 @@
 import { uploadSkit } from '../api/creator'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const UploadSkit = () => {
     const [form, setForm] = useState({
@@ -38,6 +39,7 @@ const UploadSkit = () => {
                 )
                 setUploadProgress(progress)
             })
+            toast.success('Skit uploaded successfully!')
             navigate('/creator/skits')
         } catch (error) {
             setError(error.response?.data?.msg || 'Upload failed')
