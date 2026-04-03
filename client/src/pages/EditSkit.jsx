@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { updateSkit } from '../api/creator'
 import { getSkit } from '../api/fan'
 import toast from 'react-hot-toast'
+import Spinner from '../components/Spinner'
 
 const EditSkit = () => {
     const { id } = useParams()
@@ -69,7 +70,7 @@ const EditSkit = () => {
         }
     }
 
-    if (isFetching) return <div>Loading...</div>
+    if (isFetching) return <Spinner />
     if (error) return <div>{error}</div>
     if (!skit) return <div>Skit not found!</div>
 

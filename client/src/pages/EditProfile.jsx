@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getCreatorProfile, updateCreatorProfile } from '../api/creator'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Spinner from '../components/Spinner'
 
 const EditProfile = () => {
     const [profile, setProfile] = useState(null)
@@ -65,7 +66,7 @@ const EditProfile = () => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
     if (!profile) return <div>No profile to edit, create a profile first!</div>
 

@@ -2,6 +2,7 @@ import { getSkit, likeSkit } from '../api/fan'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
+import Spinner from '../components/Spinner'
 
 const SingleSkit = () => {
     const { id } = useParams()
@@ -43,7 +44,7 @@ const SingleSkit = () => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
     if (!skit) return <div>Skit not found!</div>
 

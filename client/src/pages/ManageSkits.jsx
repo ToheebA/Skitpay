@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getCreatorSkits, deleteSkit } from '../api/creator'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Spinner from '../components/Spinner'
 
 const ManageSkits = () => {
     const [skits, setSkits] = useState([])
@@ -47,7 +48,7 @@ const ManageSkits = () => {
         setSkitToDelete(null)
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
     if (skits.length === 0) return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import useDebounce from '../hooks/useDebounce'
+import Spinner from '../components/Spinner'
 
 const Creators = () => {
     const [creators, setCreators] = useState([])
@@ -58,7 +59,7 @@ const Creators = () => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
 
     return (

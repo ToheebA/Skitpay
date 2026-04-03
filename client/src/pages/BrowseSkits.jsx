@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getAllSkits } from '../api/fan'
 import { Link } from 'react-router-dom'
 import useDebounce from '../hooks/useDebounce'
+import Spinner from '../components/Spinner'
 
 const BrowseSkits = () => {
     const [skits, setSkits] = useState([])
@@ -35,7 +36,7 @@ const BrowseSkits = () => {
         fetchSkits()
     }, [filters, debouncedSearch])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
 
     return (

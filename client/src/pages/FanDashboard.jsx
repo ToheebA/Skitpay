@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { getAllSkits, getSubscriptions, cancelSubscription } from '../api/fan'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Spinner from '../components/Spinner'
 
 const FanDashboard = () => {
     const { user } = useAuth()
@@ -54,7 +55,7 @@ const FanDashboard = () => {
         setSubscriptionToCancel(null)
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
     if (subscriptions.length === 0) return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">

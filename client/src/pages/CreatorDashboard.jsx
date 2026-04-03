@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getCreatorProfile, getCreatorStats, deactivateProfile, reactivateProfile } from '../api/creator'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Spinner from '../components/Spinner'
 
 
 const CreatorDashboard = () => {
@@ -72,7 +73,7 @@ const CreatorDashboard = () => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Spinner />
     if (error) return <div>{error}</div>
     if (!profile) {
         navigate('/creator/profile/create')
