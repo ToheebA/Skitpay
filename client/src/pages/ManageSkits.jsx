@@ -79,7 +79,7 @@ const ManageSkits = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {skits.map((skit) => (
                     <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <a href={skit.videoUrl}>
+                        <a href={skit.videoUrl} target="_blank">
                             <img 
                                 src={optimizeImage(skit.thumbnailUrl)} 
                                 alt={skit.title}
