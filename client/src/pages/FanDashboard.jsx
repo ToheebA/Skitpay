@@ -4,6 +4,7 @@ import { getAllSkits, getSubscriptions, cancelSubscription } from '../api/fan'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Spinner from '../components/Spinner'
+import { optimizeImage } from '../utils/cloudinary'
 
 const FanDashboard = () => {
     const { user } = useAuth()
@@ -12,6 +13,7 @@ const FanDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [isModal, setIsModal] = useState(false)
+    const [imageLoaded, setImageLoaded] = useState(false)
     const [subscriptionToCancel, setSubscriptionToCancel] = useState(null)
     const navigate = useNavigate()
 
@@ -147,7 +149,18 @@ const FanDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {recentSkits.map(skit => (
                         <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <img src={skit.thumbnailUrl} alt={skit.title} className="w-full h-48 object-cover"/>
+                            <div className="relative w-full h-48">    
+                                {!imageLoaded && (
+                                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-xl" />
+                                )}
+                                <img 
+                                    src={optimizeImage(skit.thumbnailUrl)} 
+                                    alt={skit.title}
+                                    loading="lazy"
+                                    onLoad={() => setImageLoaded(true)} 
+                                    className={`w-full h-48 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                                />
+                            </div>
                             <div className="p-4">
                                 <p className="font-bold text-gray-900">{skit.title}</p>
                                 <span className={`text-xs px-2 py-1 rounded-full ${skit.visibility === 'free' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>

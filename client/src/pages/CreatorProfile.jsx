@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 import Spinner from '../components/Spinner'
+import { optimizeImage } from '../utils/cloudinary'
 
 const CreatorProfile = () => {
     const { user } = useAuth()
@@ -14,6 +15,7 @@ const CreatorProfile = () => {
     const [subscriberCount, setSubscriberCount] = useState(0)
     const [isSubscribed, setIsSubscribed] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const [imageLoaded, setImageLoaded] = useState(false)
     const [error, setError] = useState('')
 
     useEffect(() => {
@@ -153,11 +155,18 @@ const CreatorProfile = () => {
                             {skits.map(skit => (
                                 <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                                     <div className="relative">
-                                        <img
-                                            src={skit.thumbnailUrl}
-                                            alt={skit.title}
-                                            className="w-full h-48 object-cover"
-                                        />
+                                        <div className="relative w-full h-48">    
+                                            {!imageLoaded && (
+                                                <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-xl" />
+                                            )}
+                                            <img 
+                                                src={optimizeImage(skit.thumbnailUrl)} 
+                                                alt={skit.title}
+                                                loading="lazy"
+                                                onLoad={() => setImageLoaded(true)} 
+                                                className={`w-full h-48 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                                            />
+                                        </div>
                                         {skit.visibility === 'paid' && !isSubscribed && (
                                             <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
                                                 <span className="text-white text-2xl">🔒</span>
