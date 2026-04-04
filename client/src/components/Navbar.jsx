@@ -11,7 +11,7 @@ const Navbar = () => {
         navigate('/')
     }
     return (
-        <nav className="bg-white shadow-sm sticky top-0 z-50 md:mb-3">
+        <nav className="bg-white shadow-sm sticky top-0 z-50">
             <div className="flex items-center justify-between px-8 py-4">    
                 <Link to="/" className="text-2xl font-bold text-purple-600">
                     SkitPay

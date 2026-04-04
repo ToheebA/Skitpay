@@ -8,7 +8,8 @@ const LandingPage = () => {
     const [activeTab, setActiveTab] = useState('creator')
     return (
         <div>
-            <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center justify-center text-center px-4 md:px-6">
+            <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 
+                flex flex-col items-center justify-center text-center px-4 md:px-6 pt-24 md:pt-0">
                 <p className="text-4xl mb-6 animate-bounce">
                     🎬 🎭 💰 🎤
                 </p>
