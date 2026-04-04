@@ -3,7 +3,10 @@ const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError } = require('../errors/index');
 
 const register = async (req, res) => {
-    const user = await User.create({ ...req.body })
+    const user = await User.create({ 
+        ...req.body,
+        email: req.body.email.toLowerCase() 
+    })
     const token = user.createJWT()
     res
     .status(201)
@@ -16,7 +19,7 @@ const login = async (req, res) => {
         throw new BadRequestError('Please provide email and password');
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email: email.toLowerCase() })
     if (!user) {
         throw new UnauthenticatedError('Invalid Credentials');
     }
