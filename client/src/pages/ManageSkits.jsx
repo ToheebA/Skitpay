@@ -79,14 +79,12 @@ const ManageSkits = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {skits.map((skit) => (
                     <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <a href={skit.videoUrl} target="_blank">
-                            <img 
-                                src={optimizeImage(skit.thumbnailUrl)} 
-                                alt={skit.title}
-                                loading="lazy"
-                                className="w-full h-48 object-cover"
-                            />
-                        </a>
+                        <img 
+                            src={optimizeImage(skit.thumbnailUrl)} 
+                            alt={skit.title}
+                            loading="lazy"
+                            className="w-full h-48 object-cover"
+                        />
                         <div className="p-4">
                             <p className="font-bold text-gray-900">{skit.title}</p>
                             <span className={`text-xs px-2 py-1 rounded-full ${skit.visibility === 'free' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
@@ -95,6 +93,13 @@ const ManageSkits = () => {
                             <p className="text-gray-500 text-sm">
                                 {skit.viewCount} views · {skit.likes.length} likes
                             </p>
+                            <a 
+                                href={skit.videoUrl} 
+                                target="_blank"
+                                className="block mt-3 text-purple-600 hover:text-purple-700 font-medium text-sm"
+                            >
+                                Watch now →
+                            </a>
                             <div className="flex gap-2 mt-3">
                                 <button 
                                     onClick={() => handleDeleteClick(skit._id)}
