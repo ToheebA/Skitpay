@@ -89,7 +89,7 @@ const BrowseSkits = () => {
                     <option value="-createdAt">Newest First</option>
                     <option value="createdAt">Oldest First</option>
                     <option value="-viewCount">Most Viewed</option>
-                    <option value="-likes">Most Liked</option>
+                    <option value="likes">Most Liked</option>
                 </select>
             </div>
             {skits.length === 0 ? (
