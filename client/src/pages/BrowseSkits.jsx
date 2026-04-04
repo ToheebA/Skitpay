@@ -40,13 +40,13 @@ const BrowseSkits = () => {
     if (error) return <div>{error}</div>
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">
                     Browse Skits
                 </h1>
             </div>
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
                 <input
                     className="flex-1 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2" 
                     type="text"
@@ -123,7 +123,7 @@ const BrowseSkits = () => {
                                 </div>
                             ))}
                         </div>
-                        <div>
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                             <button 
                                 onClick={() =>setFilters({...filters, 
                                     page: filters.page - 1})}

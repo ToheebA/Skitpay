@@ -63,13 +63,13 @@ const Creators = () => {
     if (error) return <div>{error}</div>
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">
                     Browse Creators
                 </h1>
             </div>
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
                 <input
                     className="flex-1 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2" 
                     type="text"
@@ -109,14 +109,12 @@ const Creators = () => {
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             {creators.map((creator) => (
-                                <Link to={`/creators/${creator._id}`} className="block">
-                                    <div key={creator._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <Link key={creator._id} to={`/creators/${creator._id}`} className="block">
+                                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                                         <div className="p-4">
-                                            <Link to={`/creators/${creator._id}`}>
-                                                <h3 className="font-bold text-gray-900 text-lg mb-1 hover:text-purple-600 transition-colors duration-200">
-                                                    {creator.user.name}
-                                                </h3>
-                                            </Link>                                        
+                                            <h3 className="font-bold text-gray-900 text-lg mb-1 hover:text-purple-600 transition-colors duration-200">
+                                                {creator.user.name}
+                                            </h3>                                        
                                             <p className="text-gray-500 text-sm mb-3">{creator.bio}</p>
                                             <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium capitalize mb-3 inline-block">
                                                 {creator.niche}
@@ -144,7 +142,7 @@ const Creators = () => {
                                 </Link>
                             ))}
                         </div>
-                        <div>
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                             <button 
                                 onClick={() =>setFilters({...filters, 
                                     page: filters.page - 1})}
