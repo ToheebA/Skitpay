@@ -10,7 +10,6 @@ const ManageSkits = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [isModal, setIsModal] = useState(false)
-    const [imageLoaded, setImageLoaded] = useState(false)
     const [skitToDelete, setSkitToDelete] = useState(null)
     const navigate = useNavigate()
 
@@ -81,18 +80,12 @@ const ManageSkits = () => {
                 {skits.map((skit) => (
                     <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                         <a href={skit.videoUrl}>
-                            <div className="relative w-full h-48">    
-                                {!imageLoaded && (
-                                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-xl" />
-                                )}
-                                <img 
-                                    src={optimizeImage(skit.thumbnailUrl)} 
-                                    alt={skit.title}
-                                    loading="lazy"
-                                    onLoad={() => setImageLoaded(true)} 
-                                    className={`w-full h-48 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                />
-                            </div>
+                            <img 
+                                src={optimizeImage(skit.thumbnailUrl)} 
+                                alt={skit.title}
+                                loading="lazy"
+                                className="w-full h-48 object-cover"
+                            />
                         </a>
                         <div className="p-4">
                             <p className="font-bold text-gray-900">{skit.title}</p>

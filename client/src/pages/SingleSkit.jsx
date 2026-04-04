@@ -9,7 +9,6 @@ const SingleSkit = () => {
     const { id } = useParams()
     const [skit, setSkit] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
-    const [imageLoaded, setImageLoaded] = useState(false)
     const [error, setError] = useState('')
     const { user } = useAuth()
     const navigate = useNavigate()
@@ -62,18 +61,12 @@ const SingleSkit = () => {
                         />
                     ) : (
                         <div className="relative">
-                            <div className="relative w-full h-48">    
-                                {!imageLoaded && (
-                                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-xl" />
-                                )}
-                                <img 
-                                    src={optimizeImage(skit.thumbnailUrl)} 
-                                    alt={skit.title}
-                                    loading="lazy"
-                                    onLoad={() => setImageLoaded(true)} 
-                                    className={`w-full h-48 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                />
-                            </div>
+                            <img 
+                                src={optimizeImage(skit.thumbnailUrl)} 
+                                alt={skit.title}
+                                loading="lazy"
+                                className="w-full h-48 object-cover"
+                            />
                             <div className="absolute inset-0 bg-black bg-opacity-60 rounded-xl flex flex-col items-center justify-center gap-4">
                                 <p className="text-white font-bold text-xl">🔒 Exclusive Content</p>
                                 {!user ? (

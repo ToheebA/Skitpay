@@ -13,7 +13,6 @@ const FanDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [isModal, setIsModal] = useState(false)
-    const [imageLoaded, setImageLoaded] = useState(false)
     const [subscriptionToCancel, setSubscriptionToCancel] = useState(null)
     const navigate = useNavigate()
 
@@ -72,8 +71,8 @@ const FanDashboard = () => {
     )
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <div className="flex items-center justify-between mb-8">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
                 <h1 className="text-3xl font-bold text-gray-900">
                     Welcome! {user.name}
                 </h1>
@@ -149,18 +148,12 @@ const FanDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {recentSkits.map(skit => (
                         <div key={skit._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="relative w-full h-48">    
-                                {!imageLoaded && (
-                                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-t-xl" />
-                                )}
-                                <img 
-                                    src={optimizeImage(skit.thumbnailUrl)} 
-                                    alt={skit.title}
-                                    loading="lazy"
-                                    onLoad={() => setImageLoaded(true)} 
-                                    className={`w-full h-48 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                />
-                            </div>
+                            <img 
+                                src={optimizeImage(skit.thumbnailUrl)} 
+                                alt={skit.title}
+                                loading="lazy" 
+                                className="w-full h-48 object-cover"
+                            />
                             <div className="p-4">
                                 <p className="font-bold text-gray-900">{skit.title}</p>
                                 <span className={`text-xs px-2 py-1 rounded-full ${skit.visibility === 'free' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
