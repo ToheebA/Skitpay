@@ -19,6 +19,7 @@ import UploadSkit from './pages/UploadSkit'
 import EditProfile from './pages/EditProfile'
 import ManageSkits from './pages/ManageSkits'
 import EditSkit from './pages/EditSkit'
+import PaymentVerify from './pages/PaymentVerify'
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             <FanDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/payment/verify" element={<PaymentVerify />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

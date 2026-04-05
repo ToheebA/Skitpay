@@ -1,4 +1,5 @@
-import { getCreatorPublicProfile, getSubscriptions, activateSubscription } from "../api/fan"
+import { getCreatorPublicProfile, getSubscriptions } from "../api/fan"
+import { initializePayment } from "../api/payment"
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -45,11 +46,11 @@ const CreatorProfile = () => {
     const handleSubscribe = async () => {
         if (!user) return navigate('/register')
         try {
-            await activateSubscription(id)
-            toast.success('Subscribed successfully!')
-            setIsSubscribed(true)
+            const response = await initializePayment(id)
+            const { authorizationUrl } = response.data
+            window.location.href = authorizationUrl
         } catch (error) {
-            setError(error.response?.data?.msg || 'Failed to subscribe')
+            toast.error(error.response?.data?.msg || 'Failed to initialize payment')
         }
     }
 

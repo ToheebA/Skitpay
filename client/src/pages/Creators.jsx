@@ -1,4 +1,5 @@
-import { getAllCreators, activateSubscription, getSubscriptions } from '../api/fan'
+import { getAllCreators, getSubscriptions } from '../api/fan'
+import { initializePayment } from '../api/payment'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
@@ -48,14 +49,14 @@ const Creators = () => {
         return subscribedCreatorIds.includes(creatorUserId)
     }
 
-    const handleSubscribe = async (creatorProfileId, creatorUserId) => {
+    const handleSubscribe = async (creatorProfileId) => {
         if (!user) return navigate('/register')
         try {
-            await activateSubscription(creatorProfileId)
-            setSubscribedCreatorIds([...subscribedCreatorIds, creatorUserId])
-            toast.success('Subscribed successfully!')
+            const response = await initializePayment(creatorProfileId)
+            const { authorizationUrl } = response.data
+            window.location.href = authorizationUrl
         } catch (error) {
-            setError(error.response?.data?.msg || 'Failed to subscribe')
+            toast.error(error.response?.data?.msg || 'Failed to initialize payment')
         }
     }
 
@@ -125,8 +126,8 @@ const Creators = () => {
                                                     onClick={(e) => {
                                                         e.stopPropagation()
                                                         e.preventDefault()
-                                                        !isSubscribed(creator.user._id) && handleSubscribe(creator._id, creator.user._id
-                                                    )}}
+                                                        !isSubscribed(creator.user._id) && handleSubscribe(creator._id)
+                                                    }}
                                                     disabled={isSubscribed(creator.user._id)}
                                                     className={`w-full py-2 rounded-lg transition-colors duration-200 font-medium
                                                         ${isSubscribed(creator.user._id) 
