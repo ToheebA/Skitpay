@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { initializePayment, verifyPayment, webhookHandler } = require('../controllers/paymentController');
+const { initializePayment, verifyPayment } = require('../controllers/paymentController');
 const authenticateUser = require('../middleware/authentication');
 
 router.post('/initialize/:creatorProfileId', authenticateUser, initializePayment);
