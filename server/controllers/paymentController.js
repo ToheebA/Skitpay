@@ -83,20 +83,22 @@ const verifyPayment = async (req, res) => {
 const webhookHandler = async (req, res) => {
     const hash = crypto.
         createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
-        .update(JSON.stringify(req.body))
+        .update(req.body)
         .digest('hex');
 
     if (hash !== req.headers['x-paystack-signature']) {
         throw new BadRequestError('Invalid signature');
     }
 
-    if (req.body.event !== 'charge.success') {
+    const event = JSON.parse(req.body)
+
+    if (event.event !== 'charge.success') {
         return res.status(StatusCodes.OK).send();
     }
 
     const { userId } = req.body.data.metadata;
     const creatorProfile = await Creator_Profile.findById(
-        req.body.data.metadata.creatorProfileId
+        event.data.metadata.creatorProfileId
     );
     if (!creatorProfile) {
         throw new NotFoundError(`No creator profile found with id ${req.body.data.metadata.creatorProfileId}`);
