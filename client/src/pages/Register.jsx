@@ -52,7 +52,7 @@ const Register = () => {
         }
     }
     return (
-        <div className="min-h-screen flex flex-col gap-4 items-center justify-center mt-2">
+        <div className="min-h-screen flex flex-col gap-4 items-center justify-center mt-2 px-4">
             <form onSubmit = {handleSubmit} className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md flex flex-col gap-4">
                 <h1 className="text-3xl font-bold text-purple-600 text-center mb-2">
                     SkitPay
