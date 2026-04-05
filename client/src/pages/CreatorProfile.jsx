@@ -57,10 +57,10 @@ const CreatorProfile = () => {
     if (error) return <div>{error}</div>
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-5xl mx-auto">
                 <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-8">
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col md:flex-row items-start justify-between gap-8">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">
                                 {profile.user.name}
@@ -115,7 +115,7 @@ const CreatorProfile = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center gap-4 bg-gray-50 rounded-xl p-6">
+                        <div className="flex flex-col items-center gap-4 bg-gray-50 rounded-xl p-6 w-full md:w-auto">
                             <p className="text-2xl font-bold text-gray-900">
                                 ₦{profile.subscriptionPrice}
                                 <span className="text-gray-400 text-sm font-normal">/month</span>

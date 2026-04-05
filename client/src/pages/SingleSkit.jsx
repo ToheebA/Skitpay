@@ -50,7 +50,7 @@ const SingleSkit = () => {
     if (!skit) return <div>Skit not found!</div>
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
                     {skit.videoUrl ? (
@@ -83,11 +83,14 @@ const SingleSkit = () => {
                     )}
 
                     <div className="mt-4">
-                        <h1 className="text-2xl font-bold text-gray-900">{skit.title}</h1>
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">{skit.title}</h1>
                         <div className="flex items-center gap-4 mt-2">
                             <span>{skit.viewCount} views</span>
                             <span>{skit.likes.length} likes</span>
-                            <button onClick={handleLike}>
+                            <button 
+                                onClick={handleLike}
+                                className="w-full md:w-auto px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200 cursor-pointer font-medium"
+                            >
                                 {isLiked ? '❤️ Liked' : '🤍 Like'}
                             </button>
                         </div>
