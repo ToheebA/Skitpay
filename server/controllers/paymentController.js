@@ -87,21 +87,21 @@ const webhookHandler = async (req, res) => {
         .digest('hex');
 
     if (hash !== req.headers['x-paystack-signature']) {
-        throw new BadRequestError('Invalid signature');
+        return res.status(400).json({ msg: 'Invalid signature' })    
     }
 
-    const event = JSON.parse(req.body)
+    const event = JSON.parse(req.body.toString())
 
     if (event.event !== 'charge.success') {
         return res.status(StatusCodes.OK).send();
     }
 
-    const { userId } = req.body.data.metadata;
-    const creatorProfile = await Creator_Profile.findById(
-        event.data.metadata.creatorProfileId
-    );
+    const { userId, creatorProfileId } = event.data.metadata;
+
+    const creatorProfile = await Creator_Profile.findById(creatorProfileId);
+
     if (!creatorProfile) {
-        throw new NotFoundError(`No creator profile found with id ${req.body.data.metadata.creatorProfileId}`);
+        return res.status(StatusCodes.OK).send()
     }
 
     const existingSubscription = await Subscription.findOne({
@@ -110,7 +110,7 @@ const webhookHandler = async (req, res) => {
         status: 'active'
     });
     if (existingSubscription) {
-        throw new BadRequestError('You are already subscribed to this creator');
+        return res.status(StatusCodes.OK).send()
     }
 
     const cancelledSubscription = await Subscription.findOne({
@@ -125,18 +125,18 @@ const webhookHandler = async (req, res) => {
         cancelledSubscription.status = 'active';
         cancelledSubscription.startDate = startDate;
         cancelledSubscription.endDate = endDate;
-        cancelledSubscription.amount = req.body.data.amount / 100;
+        cancelledSubscription.amount = event.data.amount / 100;
         await cancelledSubscription.save();
         return res.status(StatusCodes.OK).send();
     }
 
-    const subscription = await Subscription.create({
+    await Subscription.create({
         fan: userId,
         creator: creatorProfile.user,
-        amount: req.body.data.amount / 100,
+        amount: event.data.amount / 100,
         status: 'active',
-        startDate: startDate,
-        endDate: endDate
+        startDate,
+        endDate
     })
 
     res.status(StatusCodes.OK).send();
