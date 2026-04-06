@@ -1,4 +1,4 @@
-import { getSkit, likeSkit } from '../api/fan'
+import { getSkit, likeSkit, getCreatorPublicProfile } from '../api/fan'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -8,6 +8,7 @@ import { optimizeImage } from '../utils/cloudinary'
 const SingleSkit = () => {
     const { id } = useParams()
     const [skit, setSkit] = useState(null)
+    const [creatorId, setCreatorId] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const { user } = useAuth()
@@ -18,6 +19,7 @@ const SingleSkit = () => {
             try {
                 const response = await getSkit(id)
                 setSkit(response.data.skit)
+                setCreatorId(response.data.skit.createdBy)
             } catch (error) {
                 setError(error.response?.data?.msg || 'Failed to fetch skit')
             } finally {
@@ -74,7 +76,7 @@ const SingleSkit = () => {
                                         Sign up to watch
                                     </Link>
                                 ) : (
-                                    <Link to="/creators" className="bg-purple-600 text-white px-6 py-3 rounded-lg">
+                                    <Link to={`/creators/${creatorId}`} className="bg-purple-600 text-white px-6 py-3 rounded-lg">
                                         Subscribe to watch
                                     </Link>
                                 )}
