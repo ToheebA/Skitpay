@@ -38,7 +38,7 @@ const Register = () => {
         }
         setIsLoading(true)
         try {
-            const response = await registerUser(formData)
+            await registerUser(formData)
             toast.success('Registration successful! Check your email to verify your account.')
             navigate('/login')
         } catch (error) {

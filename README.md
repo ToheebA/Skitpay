@@ -24,6 +24,13 @@ Nigeria's first creator monetization platform built specifically for skit makers
 - Like skits and engage with creators
 - Real-time notifications for new skit uploads
 
+### Authentication
+- Email verification on registration via Resend
+- JWT authentication with 1 day expiry
+- Token expiry check on app load
+- Role based access control (creator/fan/brand)
+- Case insensitive email handling
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -101,6 +108,9 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 PAYSTACK_SECRET_KEY=your_paystack_secret
 PAYSTACK_CALLBACK_URL=http://localhost:5173/payment/verify
+CLIENT_URL=http://localhost:5173
+RESEND_API_KEY=your_resend_api_key
+NODE_ENV=development
 ```
 
 **Client `.env.development`:**
@@ -166,6 +176,15 @@ skitpay/
 - Search uses URL state (useState) — future improvement would use useSearchParams for persistent filters and shareable URLs
 - No automated testing — GitHub Actions could be added for CI/CD pipeline
 - Free tier Render deployment sleeps after inactivity — production would use paid tier
+- Resend free tier only sends to verified email — production requires domain verification at resend.com/domains
+- Email verification link redirects to localhost in development — update CLIENT_URL for production
+
+## 📧 Email Verification
+SkitPay uses Resend for transactional emails:
+- Verification email sent on registration
+- 24 hour token expiry
+- Account deleted if email fails to send
+- Production requires domain verification on Resend
 
 ## 📱 Responsive Design
 Fully responsive across mobile, tablet and desktop devices.

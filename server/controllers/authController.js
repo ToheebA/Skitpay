@@ -21,7 +21,11 @@ const register = async (req, res) => {
         isVerified: false
     })
 
-    await sendVerificationEmail(email, verificationToken)
+    const emailSent = await sendVerificationEmail(email, verificationToken)
+    if (!emailSent) {
+        await User.findByIdAndDelete(user._id)
+        throw new Error('Failed to send verification email. Please try again.')
+    }
 
     res.status(StatusCodes.CREATED).json({
         msg: 'Registration successful! Please check your email to verify your account.'
