@@ -1,16 +1,31 @@
 const User = require('../models/User');
+const crypto = require('crypto')
+const { sendVerificationEmail } = require('../utils/sendEmail')
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError } = require('../errors/index');
 
 const register = async (req, res) => {
+    const { name, email, password, role, location } = req.body
+
+    const verificationToken = crypto.randomBytes(32).toString('hex')
+    const verificationTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000)
+
     const user = await User.create({ 
-        ...req.body,
-        email: req.body.email.toLowerCase() 
+        name,
+        email: req.body.email.toLowerCase(), 
+        password,
+        role,
+        location,
+        verificationToken,
+        verificationTokenExpiry,
+        isVerified: false
     })
-    const token = user.createJWT()
-    res
-    .status(201)
-    .json({ user: { name: user.name }, token })
+
+    await sendVerificationEmail(email, verificationToken)
+
+    res.status(StatusCodes.CREATED).json({
+        msg: 'Registration successful! Please check your email to verify your account.'
+    })
 }
 
 const login = async (req, res) => {
