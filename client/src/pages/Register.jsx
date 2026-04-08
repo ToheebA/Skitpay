@@ -2,7 +2,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { registerUser } from '../api/auth'
-import { jwtDecode } from 'jwt-decode'
+import toast from 'react-hot-toast'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d\W]{8,}$/
@@ -39,12 +39,8 @@ const Register = () => {
         setIsLoading(true)
         try {
             const response = await registerUser(formData)
-            const { token } = response.data
-            login(token)
-            const decodedUser = jwtDecode(token)
-            if (decodedUser.role === 'creator') navigate('/creator/profile/create')
-            if (decodedUser.role === 'fan') navigate('/fan/dashboard')
-            if (decodedUser.role === 'brand') navigate('/brand/dashboard')
+            toast.success('Registration successful! Check your email to verify your account.')
+            navigate('/login')
         } catch (error) {
             setError(error.response?.data?.msg || 'Registration failed')
         } finally {

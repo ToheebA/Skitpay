@@ -33,6 +33,7 @@ function App() {
         <Route path="/creators" element={<Creators />} />
         <Route path="/creators/:id" element={<CreatorProfile />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/creator/profile/create" element={
           <ProtectedRoute allowedRoles={['creator']}>
