@@ -30,6 +30,16 @@ const UserSchema = new mongoose.Schema({
         enum: ['creator', 'fan', 'brand'],
         default: 'creator',
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String
+    },
+    verificationTokenExpiry: {
+        type: Date
+    },
     location: String
 }, {timestamps: true});
 
