@@ -58,6 +58,9 @@ const login = async (req, res) => {
     if (!user) {
         throw new UnauthenticatedError('Invalid Credentials');
     }
+    if (!user.isVerified) {
+        throw new UnauthenticatedError('Please verify your email before logging in')
+    }
 
     const isPasswordCorrect = await user.comparePassword(password)
     if (!isPasswordCorrect) {
