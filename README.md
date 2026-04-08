@@ -45,25 +45,28 @@ Nigeria's first creator monetization platform built specifically for skit makers
 - Multer (file uploads)
 
 ## 🏗️ Architecture
+```
 Client (React/Vite)
-↓ HTTP requests
+      ↓ HTTP requests
 Express REST API
-↓
+      ↓
 MongoDB Atlas (database)
-↓
+      ↓
 Cloudinary (media storage)
-↓
+      ↓
 Paystack (payments)
+
 Real-time:
 Client ←→ Socket.io ←→ Express Server
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-Node.js v18+
-MongoDB Atlas account
-Cloudinary account
-Paystack account
+- Node.js v18+
+- MongoDB Atlas account
+- Cloudinary account
+- Paystack account
 
 ### Installation
 
@@ -88,6 +91,7 @@ npm install
 ### Environment Variables
 
 **Server `.env`:**
+```
 PORT=5000
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
@@ -97,10 +101,13 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 PAYSTACK_SECRET_KEY=your_paystack_secret
 PAYSTACK_CALLBACK_URL=http://localhost:5173/payment/verify
+```
 
 **Client `.env.development`:**
+```
 VITE_API_URL=http://localhost:5000/api/v1
 VITE_SOCKET_URL=http://localhost:5000
+```
 
 
 ### Running Locally
@@ -122,6 +129,7 @@ http://localhost:5173/
 
 
 ## 📁 Project Structure
+```
 skitpay/
 ├── client/                 # React frontend
 │   ├── src/
@@ -141,6 +149,7 @@ skitpay/
 │   ├── models/            # Mongoose models
 │   └── routes/            # Express routes
 └── README.md
+```
 
 
 ## 🔒 Security
