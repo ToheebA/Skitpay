@@ -20,6 +20,7 @@ import EditProfile from './pages/EditProfile'
 import ManageSkits from './pages/ManageSkits'
 import EditSkit from './pages/EditSkit'
 import PaymentVerify from './pages/PaymentVerify'
+import VerifyEmail from './pages/VerifyEmail'
 
 function App() {
   return (
