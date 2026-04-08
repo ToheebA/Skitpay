@@ -28,6 +28,26 @@ const register = async (req, res) => {
     })
 }
 
+const verifyEmail = async (req, res) => {
+    const { token } = req.query
+
+    const user = await User.findOne({
+        verificationToken: token,
+        verificationTokenExpiry: { $gt: Date.now() }
+    })
+
+    if (!user) {
+        throw new BadRequestError('Invalid or expired verification token')
+    }
+
+    user.isVerified = true
+    user.verificationToken = undefined
+    user.verificationTokenExpiry = undefined
+    await user.save()
+
+    res.status(StatusCodes.OK).json({ msg: 'Email verified successfully! You can now login.' })
+}
+
 const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
