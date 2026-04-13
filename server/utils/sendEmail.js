@@ -1,8 +1,8 @@
 const { Resend } = require('resend')
 
-const sendVerificationEmail = async (email, token) => {
-    const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY)
 
+const sendVerificationEmail = async (email, token) => {
     try {
         const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`
 
