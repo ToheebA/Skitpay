@@ -221,7 +221,7 @@ const activateSubscription = async (req, res) => {
         throw new NotFoundError('User not found');
     }
     
-    if (userId === creatorProfile.user.toString()) {
+    if (userId.toString() === creatorProfile.user.toString()) {
         throw new BadRequestError('You cannot subscribe to yourself');
     }
     const existingSubscription = await Subscription.findOne({

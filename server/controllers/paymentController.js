@@ -18,6 +18,10 @@ const initializePayment = async (req, res) => {
         isActive: true
     })
 
+    if (userId.toString() === creatorProfile.user.toString()) {
+        throw new BadRequestError('You cannot subscribe to yourself');
+    }
+
     if (!creatorProfile) {
         throw new NotFoundError(`No active creator profile found with id ${creatorProfileId}`);
     }
