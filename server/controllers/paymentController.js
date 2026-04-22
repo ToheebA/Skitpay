@@ -91,7 +91,7 @@ const webhookHandler = async (req, res) => {
         .digest('hex');
 
     if (hash !== req.headers['x-paystack-signature']) {
-        return res.status(400).json({ msg: 'Invalid signature' })    
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg: 'Invalid signature' })    
     }
 
     const event = JSON.parse(req.body.toString())
