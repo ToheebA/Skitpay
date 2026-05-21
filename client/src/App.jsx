@@ -40,7 +40,7 @@ function App() {
           <ProtectedRoute allowedRoles={['creator']}>
               <CreateProfile />
           </ProtectedRoute>
-      } />
+        } />
         <Route path="/creator/dashboard" element={
           <ProtectedRoute allowedRoles={['creator']}>  
             <CreatorDashboard />

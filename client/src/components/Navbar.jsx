@@ -16,14 +16,12 @@ const Navbar = () => {
                 <Link to="/" className="text-2xl font-bold text-purple-600">
                     SkitPay
                 </Link>
-
                 <button
                     className="md:hidden cursor-pointer text-xl"
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? '✕' : '☰'}
                 </button>
-
                 <div className="hidden md:flex gap-6">
                     <Link 
                         to="/browse"
